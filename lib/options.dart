@@ -27,7 +27,17 @@ class Options extends StatelessWidget {
               D: this.D
             ),
             IntervalPicker(D: this.D),
-            RaisedButton(onPressed: null, child: Text('Back'))
+            RaisedButton(
+              onPressed: null,
+              padding: EdgeInsets.all(12),
+              child: Text(
+                'Back',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontFamily: 'Roboto'
+                ),
+              )
+            )
           ],
         )
       )
@@ -84,14 +94,98 @@ class _TimePickerState extends State<TimePicker> {
   Widget build(BuildContext context) {
     //final TextStyle valueStyle = Theme.of(context).textTheme.bodyText2;
     return Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
-          RaisedButton(
-            onPressed: () => {_selectTime(context)}, 
-            child: Text(widget.id == "start" ? "Start Time" : "End Time")
+          InkWell(
+              onTap: () => {_selectTime(context)},
+              child: Text(parseString(), style: TextStyle(fontFamily: 'Roboto', fontSize: 30))
           ),
-          Text(parseString(), style: TextStyle(fontWeight: FontWeight.bold, fontFamily: 'Roboto'))
+          RaisedButton(
+            onPressed: () => {_selectTime(context)},
+            padding: EdgeInsets.all(12),
+            child: Text(
+              widget.id == "start" ? "Pick Start Time" : "Pick End Time",
+              style: TextStyle(
+                fontSize: 20,
+                fontFamily: 'Roboto'
+              ),
+            ) 
+          )
         ],
+      );
+  }
+}
+
+class IntervalInput extends StatefulWidget {
+  final Data D;
+  final String id;
+  IntervalInput({this.D, this.id});
+  @override
+  _IntervalInputState createState() => _IntervalInputState(id: id, val: D.getVal(id).toString());
+}
+
+class _IntervalInputState extends State<IntervalInput> {
+  String id;
+  String val;
+  _IntervalInputState({this.id, this.val});
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        mainAxisSize: MainAxisSize.max,
+        children: <Widget>[
+          SizedBox(
+            height: 40,
+            width: 45,
+            child: TextFormField(
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: val
+              )
+            )
+          ),
+          SizedBox(width: 10),
+          Text(id, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+        ]
+    );
+  }
+}
+
+class IntervalPicker extends StatelessWidget {
+  final Data D;
+  IntervalPicker({this.D});
+  @override
+  Widget build(BuildContext context) {
+    return 
+      Container(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: <Widget>[ 
+            Form(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisSize: MainAxisSize.max,
+                children: <Widget>[
+                  IntervalInput(D: D, id: "H"),
+                  SizedBox(height: 20),
+                  IntervalInput(D: D, id: "M")
+                ],
+              )
+            ),
+            RaisedButton(
+              onPressed: null,
+              padding: EdgeInsets.all(12),
+              child: Text(
+                'Enter Interval',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontFamily: 'Roboto'
+                ),
+              ),
+            )
+          ],
+        )
       );
   }
 }
@@ -121,63 +215,6 @@ class Description extends StatelessWidget {
                 TextSpan(text: 'End Time ', style: TextStyle(fontWeight: FontWeight.bold)),
               ],
             ),
-        )
-      );
-  }
-}
-
-class IntervalPicker extends StatefulWidget {
-  final Data D;
-  IntervalPicker({this.D});
-  @override
-  _IntervalPickerState createState() => _IntervalPickerState(D.getVal("intvlHour"), D.getVal("intvlMin"));
-}
-
-class _IntervalPickerState extends State<IntervalPicker> {
-  String hour, minute;
-  _IntervalPickerState(int h, int m) {
-    hour = h.toString();
-    minute = m.toString();
-  }
-  @override
-  Widget build(BuildContext context) {
-    return 
-      Container(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: <Widget>[
-            RaisedButton(
-              onPressed: null,
-              child: Text('Set Interval'),
-              ), 
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  SizedBox(
-                    height: 45,
-                    width: 50,
-                    child: TextField(
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                        labelText: hour
-                      )
-                    )
-                  ),
-                  Text(":", style: TextStyle(fontWeight: FontWeight.bold),),
-                  SizedBox(
-                    height: 45,
-                    width: 50,
-                    child: TextField(
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                        labelText: minute
-                      )
-                    )
-                  ),
-                ],
-              )
-          ],
         )
       );
   }

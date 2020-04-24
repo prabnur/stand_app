@@ -6,8 +6,8 @@ class Data {
   int endHour = 17;
   int endMin = 0;
   Map<String, int> map = {
-    "intvlHour": 1,
-    "intvlMin": 0,
+    "H": 1,
+    "M": 0,
     "startHour": 9,
     "startMin": 0,
     "endHour": 17,
