@@ -1,0 +1,3 @@
+Numbers entered into interval < 0
+endTime < startTime
+
