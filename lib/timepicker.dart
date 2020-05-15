@@ -4,7 +4,7 @@ import 'data.dart';
 
 class TimePicker extends StatefulWidget {
   final String id;
-  Function selectTime;
+  final Function selectTime;
   final Data D;
 
   TimePicker({this.id, this.selectTime, this.D});

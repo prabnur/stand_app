@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'dart:convert';
-import 'package:flutter/cupertino.dart';
+//import 'package:flutter/cupertino.dart';
 import 'package:path_provider/path_provider.dart';
 
 class Data {
@@ -21,8 +21,6 @@ class Data {
       Map ret = jsonDecode(contents);
       map = new Map();
       ret.forEach((key, value) {map[key] = value;});
-
-      loadConfirm(true);
       
     } catch(e) {
       print("Could not read file");
@@ -34,8 +32,8 @@ class Data {
         "endHour": 17,
         "endMin": 0
       };
-      loadConfirm(true);
     }
+    loadConfirm(true);
   }
 
   void setLoadConfirm(Function setLoaded) {

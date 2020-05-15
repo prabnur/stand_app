@@ -6,12 +6,33 @@ import 'data.dart';
 import 'timepicker.dart';
 import 'intervalpicker.dart';
 
-class Options extends StatelessWidget {
+class Options extends StatefulWidget {
+  final Data D;
+
+  Options({this.D});
+
+  @override
+  _Options createState() => _Options(D: this.D);
+}
+
+class _Options extends State<Options> {
   final Data D;
   final hController = TextEditingController();
   final mController = TextEditingController();
+  int H;
+  int M;
 
-  Options({this.D});
+  _Options({this.D}) {
+    H = D.getVal("H");
+    M = D.getVal("M");
+  }
+
+  @override
+  void dispose() {
+    hController.dispose();
+    mController.dispose();
+    super.dispose();
+  }
 
   void setTime(String id, TimeOfDay newTime) {
     D.setVal("${id}Hour", newTime.hour);
@@ -44,6 +65,10 @@ class Options extends StatelessWidget {
 
     if (D.isDataValid()) {
       D.writeData();
+      setState(() {
+        H = D.getVal("H");
+        M = D.getVal("M");
+      });
     } else {
       displayMessage(D.getMsg);
     }
@@ -51,25 +76,49 @@ class Options extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold (
+    return
+    Scaffold (
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
+
             Container(
               child: Description()
             ),
+
             TimePicker(
               id: "start",
               selectTime: (TimeOfDay newTime) => {setTime("start", newTime)},
               D: this.D
             ),
+
             TimePicker(
               id: "end",
               selectTime: (TimeOfDay newTime) => {setTime("end", newTime)},
               D: this.D
             ),
-            IntervalPicker(hController: this.hController, mController: this.mController, D: this.D),
+
+            Container(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: <Widget>[
+
+                  Text(
+                    'Currently Every \n $H Hr $M Min',
+                    style: TextStyle(
+                      fontSize: 25,
+                      fontFamily: 'Roboto',
+                      color: Colors.black
+                    )
+                  ),
+
+                  IntervalPicker(hController: this.hController, mController: this.mController, D: D)
+                  
+                ],
+              )
+            ),
+
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
@@ -100,6 +149,7 @@ class Options extends StatelessWidget {
                 
               ],
             ),
+
           ],
         )
       )

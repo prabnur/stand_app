@@ -19,15 +19,17 @@ class Home extends StatelessWidget {
 }
 
 class OptionsWrapper extends StatefulWidget {
+  final Data D = new Data();
+
   @override
-  _OptionsWrapperState createState() => _OptionsWrapperState();
+  _OptionsWrapperState createState() => _OptionsWrapperState(D: this.D);
 }
 
 class _OptionsWrapperState extends State<OptionsWrapper> {
   bool loaded;
-  final Data D = new Data();
+  final Data D;
 
-  _OptionsWrapperState();
+  _OptionsWrapperState({this.D});
 
   @override
   void initState() {
@@ -46,6 +48,6 @@ class _OptionsWrapperState extends State<OptionsWrapper> {
 
   @override
   Widget build(BuildContext context) {
-    return (loaded ? Options(D: D) : Scaffold(body: Text('Loading'))); // TO:DO add a loading screen
+    return (loaded ? Options(D: this.D) : Scaffold(body: Text('Loading'))); // TO:DO add a loading screen
   }
 }
