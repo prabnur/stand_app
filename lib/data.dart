@@ -1,13 +1,12 @@
 import 'dart:io';
 import 'dart:convert';
-//import 'package:flutter/cupertino.dart';
 import 'package:path_provider/path_provider.dart';
 
 class Data {
-  Map<String, int> map;
+  Map<String, dynamic> map;
   String msg;
   Function loadConfirm;
-  List<String> keys = ["H", "M", "startHour", "startMin", "endHour", "endMin"];
+  List<String> keys = ["H", "M", "startHour", "startMin", "endHour", "endMin", "days"];
 
   Data() {
     msg = "";
@@ -17,10 +16,7 @@ class Data {
     try {
       final File file = await _localFile;
       String contents = await file.readAsString();
-
-      Map ret = jsonDecode(contents);
-      map = new Map();
-      ret.forEach((key, value) {map[key] = value;});
+      map = jsonDecode(contents);
       
     } catch(e) {
       print("Could not read file");
@@ -30,7 +26,8 @@ class Data {
         "startHour": 9,
         "startMin": 0,
         "endHour": 17,
-        "endMin": 0
+        "endMin": 0,
+        "days": "1111100"
       };
     }
     loadConfirm(true);
@@ -93,15 +90,20 @@ class Data {
   void writeData() async {
     final File file = await _localFile;
 
-    //Map<String, String> mapStr = new Map();
-    //map.forEach((key, value) {mapStr[key] = value.toString();});
-
     file.writeAsString(jsonEncode(map));
     print("file written");
   }
 
   int getVal(String key) {
     return map[key];
+  }
+
+  String getDays() {
+    return map["days"];
+  }
+
+  void setDays(String val) {
+    map["days"] = val;
   }
 
   void setVal(String key, int val) {
@@ -112,13 +114,4 @@ class Data {
     return ((map['endHour'] * 60) + map['endMin']) - 
            ((map['startHour'] * 60) + map['startMin']);
   }
-  /*
-  bool isIntervalNegative(String id, int h, int m) {
-    if (id == 'end') {
-      return ((h * 60) + m) - ((map['startHour'] * 60) + map['startMin']) < 0;
-    } else { // if (id == 'start') 
-      return ((map['endHour'] * 60) + map['endMin']) - ((h * 60) + m) < 0;
-    }
-  }
-  */
 }

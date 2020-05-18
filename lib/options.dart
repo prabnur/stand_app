@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'data.dart';
 import 'timepicker.dart';
 import 'intervalpicker.dart';
+import 'dayspicker.dart';
 
 class Options extends StatefulWidget {
   final Data D;
@@ -19,12 +20,18 @@ class _Options extends State<Options> {
   final Data D;
   final hController = TextEditingController();
   final mController = TextEditingController();
+  final List<String> days = new List(7);
   int H;
   int M;
 
   _Options({this.D}) {
     H = D.getVal("H");
     M = D.getVal("M");
+    String dayString = D.getDays();
+
+    for(int i=0; i<dayString.length; i++) {
+      days[i] = dayString[i];
+    }
   }
 
   @override
@@ -37,10 +44,6 @@ class _Options extends State<Options> {
   void setTime(String id, TimeOfDay newTime) {
     D.setVal("${id}Hour", newTime.hour);
     D.setVal("${id}Min", newTime.minute);
-  }
-
-  void setInterval(String id, int val) {
-    D.setVal(id, val);
   }
 
   void displayMessage(String message) {
@@ -63,6 +66,8 @@ class _Options extends State<Options> {
       D.setVal("M", int.parse(mController.text));
     }
 
+    D.setDays(days.join());
+
     if (D.isDataValid()) {
       D.writeData();
       setState(() {
@@ -83,9 +88,7 @@ class _Options extends State<Options> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
 
-            Container(
-              child: Description()
-            ),
+            Description(),
 
             TimePicker(
               id: "start",
@@ -118,6 +121,8 @@ class _Options extends State<Options> {
                 ],
               )
             ),
+
+            DayPickers(init: days.join(), toggleDay: (int idx) => {days[idx] = days[idx] == "1" ? "0" : "1"}),
 
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -163,26 +168,26 @@ class Description extends StatelessWidget {
     const double margin = 20;
     const double fontSize = 26;
     return
-        Container(
-          margin: const EdgeInsets.only(left: margin, right: margin), 
-          child: RichText(
-            text: TextSpan(
-              text: 'This app will remind you to stand at every ',
-              style: 
-                TextStyle(
-                  color: Colors.black,
-                  fontFamily: 'Roboto',
-                  fontSize: fontSize
-                ),
-              children: <TextSpan> [
-                TextSpan(text: 'interval ', style: TextStyle(fontWeight: FontWeight.bold)),
-                TextSpan(text: 'after the '),
-                TextSpan(text: 'Start Time ', style: TextStyle(fontWeight: FontWeight.bold)),
-                TextSpan(text: 'up till the '),
-                TextSpan(text: 'End Time ', style: TextStyle(fontWeight: FontWeight.bold)),
-              ],
+    Container(
+      margin: const EdgeInsets.only(left: margin, right: margin), 
+      child: RichText(
+        text: TextSpan(
+          text: 'This app will remind you to stand at every ',
+          style: 
+            TextStyle(
+              color: Colors.black,
+              fontFamily: 'Roboto',
+              fontSize: fontSize
             ),
-        )
-      );
+          children: <TextSpan> [
+            TextSpan(text: 'interval ', style: TextStyle(fontWeight: FontWeight.bold)),
+            TextSpan(text: 'after the '),
+            TextSpan(text: 'Start Time ', style: TextStyle(fontWeight: FontWeight.bold)),
+            TextSpan(text: 'up till the '),
+            TextSpan(text: 'End Time ', style: TextStyle(fontWeight: FontWeight.bold)),
+          ],
+        ),
+      )
+    );
   }
 }
