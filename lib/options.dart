@@ -46,14 +46,14 @@ class _Options extends State<Options> {
     D.setVal("${id}Min", newTime.minute);
   }
 
-  void displayMessage(String message) {
+  void displayMessage(String message, Color textCol) {
     Fluttertoast.showToast(
       msg: message,
       toastLength: Toast.LENGTH_LONG,
       gravity: ToastGravity.TOP,
       timeInSecForIosWeb: 3,
       backgroundColor: Colors.black,
-      textColor: Colors.red,
+      textColor: textCol,
       fontSize: 18
     );
   }
@@ -74,8 +74,9 @@ class _Options extends State<Options> {
         H = D.getVal("H");
         M = D.getVal("M");
       });
+      displayMessage("Changes Applied!", Colors.green);
     } else {
-      displayMessage(D.getMsg);
+      displayMessage(D.getMsg, Colors.red);
     }
   }
 

@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'package:flutter/cupertino.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter/material.dart';
 
 import 'data.dart';
@@ -14,30 +16,70 @@ class Home extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       color: Colors.white,
-      home: OptionsWrapper()
+      home: InitOptions()
     );
   }
 }
 
-class OptionsWrapper extends StatefulWidget {
+class InitOptions extends StatefulWidget {
   final Data D = new Data();
+  final FlutterLocalNotificationsPlugin notificationsPlugin = FlutterLocalNotificationsPlugin();
 
   @override
-  _OptionsWrapperState createState() => _OptionsWrapperState(D: this.D);
+  _InitOptions createState() => _InitOptions(D: this.D, notificationsPlugin: this.notificationsPlugin);
 }
 
-class _OptionsWrapperState extends State<OptionsWrapper> {
+class _InitOptions extends State<InitOptions> {
   bool loaded;
   final Data D;
+  final FlutterLocalNotificationsPlugin notificationsPlugin;
 
-  _OptionsWrapperState({this.D});
+  _InitOptions({this.D, this.notificationsPlugin});
 
   @override
   void initState() {
     super.initState();
     loaded = false;
     D.setLoadConfirm(setLoaded);
-    D.initState();
+    initNotificationsPlugin();
+    D.initState(notificationsPlugin);
+  }
+
+  void initNotificationsPlugin() async {
+    // initialise the plugin. app_icon needs to be a added as a drawable resource to the Android head project
+    var initializationSettingsAndroid = AndroidInitializationSettings('@mipmap/ic_launcher');
+    var initializationSettingsIOS = IOSInitializationSettings(
+      requestSoundPermission: false,
+      requestBadgePermission: true,
+      requestAlertPermission: true,
+      onDidReceiveLocalNotification: onDidReceiveLocalNotification
+    ); // TO:DO when notification is requested while in app
+    var initializationSettings = InitializationSettings(initializationSettingsAndroid, initializationSettingsIOS);
+    await notificationsPlugin.initialize(initializationSettings, onSelectNotification: Data.updateSteps);
+  }
+
+  Future onDidReceiveLocalNotification(int id, String title, String body, String payload) async {
+    // display a dialog with the notification details, tap ok to go to another page
+    showDialog(
+      context: context,
+      builder: (BuildContext context) => 
+        CupertinoAlertDialog(
+            title: Text(Data.iOSInAppNotifTitle),
+            content: Text(Data.iOSInAppNotifMsg),
+            actions: [
+              CupertinoDialogAction(
+                isDefaultAction: true,
+                child: Text("Dismiss"),
+                onPressed: () {}
+              ),
+              CupertinoDialogAction(
+                isDefaultAction: true,
+                child: Text("I'll Stand!"),
+                onPressed: () {Data.updateSteps('');}
+              )
+            ],
+        ),
+    );
   }
 
   void setLoaded(bool b) {
