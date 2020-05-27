@@ -55,13 +55,14 @@ class Data {
       msg = "Interval Minute must be between 0 and 59";
     }
 
-    // Check if end < start
+    /* Check if end < start
     if ((map["startHour"] > map["endHour"]) || ((map["startHour"] == map["endHour"]) && (map["startMin"] > map["endMin"]))) {
       msg = "End time must be greater than start time";
       return false;
     }
+    */
 
-  // Check if there is enough room for an interval between start and end
+    // Check if there is enough room for an interval between start and end
     if (getMaxInterval() < ((map["H"] * 60) + map["M"])) {
       msg = "Interval too large for chosen start and end times";
       return false;
@@ -109,9 +110,22 @@ class Data {
   void setVal(String key, int val) {
     map[key] = val;
   }
+
+  /*
+  String getShift() {
+    return (((map['endHour'] * 60) + map['endMin'] - 
+             (map['startHour'] * 60) + map['startMin']) >= 0 ?
+            "day" : "night");
+  }
+  */
   
   int getMaxInterval() {
-    return ((map['endHour'] * 60) + map['endMin']) - 
-           ((map['startHour'] * 60) + map['startMin']);
+    return
+    max(
+      ((map['endHour'] * 60) + map['endMin'] - 
+       (map['startHour'] * 60) + map['startMin']),
+      ((map['startHour'] * 60) + map['startMin'] - 
+       (map['endHour'] * 60) + map['endMin'])
+    );
   }
 }
