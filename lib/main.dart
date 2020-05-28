@@ -7,6 +7,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter/material.dart';
 
 import 'data.dart';
+import 'notifications.dart';
 import 'options.dart';
 
 void main() => runApp(Home());
@@ -56,6 +57,7 @@ class _InitOptions extends State<InitOptions> {
     ); // TO:DO when notification is requested while in app
     var initializationSettings = InitializationSettings(initializationSettingsAndroid, initializationSettingsIOS);
     await notificationsPlugin.initialize(initializationSettings, onSelectNotification: Data.updateSteps);
+    print("notifications plugin initialised");
   }
 
   Future onDidReceiveLocalNotification(int id, String title, String body, String payload) async {
@@ -64,8 +66,8 @@ class _InitOptions extends State<InitOptions> {
       context: context,
       builder: (BuildContext context) => 
         CupertinoAlertDialog(
-            title: Text(Data.iOSInAppNotifTitle),
-            content: Text(Data.iOSInAppNotifMsg),
+            title: Text(NotificationsManager.iOSInAppNotifTitle),
+            content: Text(NotificationsManager.iOSInAppNotifMsg),
             actions: [
               CupertinoDialogAction(
                 isDefaultAction: true,

@@ -1,22 +1,20 @@
 import 'dart:io';
 import 'dart:convert';
+import 'dart:math';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:path_provider/path_provider.dart';
 
+import 'notifications.dart';
+
 class Data {
   static List<String> keys = ["H", "M", "startHour", "startMin", "endHour", "endMin", "days"];
-
-  static String notificationTitle = "Stand Up!"; 
-  static String notificationMsg = "Tap if you stand. Swipe to dismiss.";
-
-  static final String iOSInAppNotifTitle = "Stand Up!";
-  static final String iOSInAppNotifMsg = "Do it for the Motherland!";
 
   Map<String, dynamic> map;
   int stepsTaken;
   int stepsToTake;
 
-  FlutterLocalNotificationsPlugin notificationsPlugin;  
+  FlutterLocalNotificationsPlugin notificationsPlugin;
+  NotificationsManager nm;
   String msg;
   Function loadConfirm;
 
@@ -46,6 +44,7 @@ class Data {
     }
     setSteps();
     notificationsPlugin = nP;
+    nm = new NotificationsManager();
     loadConfirm(true);
   }
 
@@ -81,10 +80,22 @@ class Data {
     stepsToTake = getMaxInterval() ~/ intvl;
   }
 
-  void setNotifications() async {
-    // Cancel all previous notifications
+  void writeData() async {
+    final File timekeeper = await _localTimeFile;
+    timekeeper.writeAsString(jsonEncode(map));
+
+    calculateSteps();
+    final File trackkeeper = await _localTrackFile;
+    trackkeeper.writeAsString(stepsTaken.toString() + "/" + stepsToTake.toString());
+
+    List<int> timeStamps = calcTimeStamps();
+    nm.spawnIsolate(timeStamps, map["days"], notificationsPlugin);
+
+    //scheduleNotification();
+    //displayNotification();
+    /*
+    // Cancel all previous notifications  
     await notificationsPlugin.cancelAll();
-    print(" PRINT Cancelled all notificaitons");
 
     // Setup configurations                                             id      name       description
     var androidPlatformChannelSpecifics = AndroidNotificationDetails('alpha', 'Stand Up', 'Plus Ultra!');
@@ -92,34 +103,85 @@ class Data {
     var platformChannelSpecifics = NotificationDetails(androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
 
     List<Day> daysOfWeek = [Day.Monday, Day.Tuesday, Day.Wednesday, Day.Thursday, Day.Friday, Day.Saturday, Day.Sunday];
-    List<Time> timeStamps = new List();
-
-    // Calculate time stamps
-    int start = (map['startHour'] * 60) + map['startMin'];
-    int end = (map['endHour'] * 60) + map['endMin'];
-    int intvl = (map['H'] * 60) + map['M'];
-    while(start <= end) {
-      start += intvl;
-      print("H ${start ~/ 60} M ${start%60} S 0");
-      timeStamps.add(new Time(start ~/ 60, start%60, 0));
-    }
-
+    String reply = "";
     // Set the notifications
     for(int i=0; i<daysOfWeek.length; i++) {
-      if (map["days"][i] == 1) {
+      if (map["days"][i] == "1") {
         for(int j=0; j<timeStamps.length; j++) {
-          await notificationsPlugin.showWeeklyAtDayAndTime(
-            0,
-            notificationTitle,
-            notificationMsg,
-            daysOfWeek[i],
-            timeStamps[j],
-            platformChannelSpecifics
-          );
+          try {
+            await notificationsPlugin.showWeeklyAtDayAndTime(
+              0,
+              "test mfer",
+              "knock knock bitch",
+              daysOfWeek[i],
+              new Time(timeStamps[j] ~/ 60, timeStamps[j] % 60, 0),
+              platformChannelSpecifics
+            );
+            reply += "DAY $i H ${timeStamps[j] ~/ 60} M ${timeStamps[j] % 60} \n";
+          } catch(e) {
+             print("[Set Failed]: "+e.message);
+          }
         }
       }
     }
-    print(" PRINT ${timeStamps.length} Notifications set");
+
+    var reqs = await notificationsPlugin.pendingNotificationRequests();
+    var req = reqs[0];
+    */
+  }
+
+  void scheduleNotification() async {
+    var time = DateTime.now().add(Duration(seconds: 20));
+    var androidPlatformChannelSpecifics =  AndroidNotificationDetails('show weekly channel id',
+            'show weekly channel name', 'show weekly description');
+    var iOSPlatformChannelSpecifics =
+        IOSNotificationDetails();
+    var platformChannelSpecifics = NotificationDetails(
+        androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
+    await notificationsPlugin.showWeeklyAtDayAndTime(
+        0,
+        'Weekly',
+        'fuck you. like I meanted it.',
+        Day.Sunday,
+        new Time(time.hour, time.minute, time.second),
+        platformChannelSpecifics);
+    print("Notification Set!");
+  }
+
+  void displayNotification() async {
+    var androidPlatformChannelSpecifics = AndroidNotificationDetails(
+    'id_1', 'test_channel', 'What is my purpose',
+    importance: Importance.Max, priority: Priority.High, ticker: 'ticker');
+    var iOSPlatformChannelSpecifics = IOSNotificationDetails();
+    var platformChannelSpecifics = NotificationDetails(androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
+    await notificationsPlugin.show(
+      0, 'YOLO', 'You will die a Genji main.', platformChannelSpecifics,
+      payload: 'item x');
+  }
+
+  List<int> calcTimeStamps() {
+    int intvl = (map['H'] * 60) + map['M'];
+    int start = (map['startHour'] * 60) + map['startMin'];
+    int end = (map['endHour'] * 60) + map['endMin'];
+
+    List<int> timeStamps = new List();
+    
+    if (start < end) { // Day Shift
+      while(start <= end) {
+        timeStamps.add(start);
+        start += intvl;
+      }
+    } else if (start > end) { // Night Shift
+      while(start != end) {
+        timeStamps.add(start);
+        start += intvl;
+        if (start >= 24*60) {
+          start = 0;
+        }
+      }
+    }
+
+    return timeStamps;
   }
 
   bool isDataValid() {
@@ -139,11 +201,12 @@ class Data {
       msg = "Interval Minute must be between 0 and 59";
     }
 
-    // Check if end < start
+    /* Check if end < start
     if ((map["startHour"] > map["endHour"]) || ((map["startHour"] == map["endHour"]) && (map["startMin"] > map["endMin"]))) {
       msg = "End time must be greater than start time";
       return false;
     }
+    */
 
     // Check if there is enough room for an interval between start and end
     if (getMaxInterval() < ((map["H"] * 60) + map["M"])) {
@@ -174,17 +237,6 @@ class Data {
     return File('$path/tracker.txt');
   }
 
-  void writeData() async {
-    final File timekeeper = await _localTimeFile;
-    timekeeper.writeAsString(jsonEncode(map));
-
-    calculateSteps();
-    final File trackkeeper = await _localTrackFile;
-    trackkeeper.writeAsString(stepsTaken.toString() + "/" + stepsToTake.toString());
-
-    setNotifications();
-  }
-
   void setLoadConfirm(Function setLoaded) {
     loadConfirm = setLoaded;
     print("Set Load Confirmed");
@@ -207,7 +259,12 @@ class Data {
   }
   
   int getMaxInterval() {
-    return ((map['endHour'] * 60) + map['endMin']) - 
-           ((map['startHour'] * 60) + map['startMin']);
+    return
+    max(
+      ((map['endHour'] * 60) + map['endMin'] - 
+       (map['startHour'] * 60) + map['startMin']),
+      ((map['startHour'] * 60) + map['startMin'] - 
+       (map['endHour'] * 60) + map['endMin'])
+    );
   }
 }

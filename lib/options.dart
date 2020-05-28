@@ -58,14 +58,18 @@ class _Options extends State<Options> {
     );
   }
 
-  void confirm() {
+  void updateInterval() {
     if (hController.text != "") {
       D.setVal("H", int.parse(hController.text));
-    }
-    if (mController.text != "") {
+      D.setVal("M", (mController.text != "" ? int.parse(mController.text) : 0));
+    } else if (mController.text != "") {
+      D.setVal("H", 0);
       D.setVal("M", int.parse(mController.text));
     }
+  }
 
+  void confirm() {
+    updateInterval();
     D.setDays(days.join());
 
     if (D.isDataValid()) {
