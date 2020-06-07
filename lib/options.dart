@@ -58,7 +58,7 @@ class _Options extends State<Options> {
     );
   }
 
-   void updateInterval() {
+  void updateInterval() {
     if (hController.text != "") {
       D.setVal("H", int.parse(hController.text));
       D.setVal("M", (mController.text != "" ? int.parse(mController.text) : 0));

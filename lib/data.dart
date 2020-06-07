@@ -184,6 +184,14 @@ class Data {
   void setVal(String key, int val) {
     map[key] = val;
   }
+
+  /*
+  String getShift() {
+    return (((map['endHour'] * 60) + map['endMin'] - 
+             (map['startHour'] * 60) + map['startMin']) >= 0 ?
+            "day" : "night");
+  }
+  */
   
   int getMaxInterval() {
     return
