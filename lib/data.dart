@@ -14,7 +14,6 @@ class Data {
   int stepsToTake;
 
   FlutterLocalNotificationsPlugin notificationsPlugin;
-  NotificationsManager nm;
   String msg;
   Function loadConfirm;
 
@@ -44,7 +43,6 @@ class Data {
     }
     setSteps();
     notificationsPlugin = nP;
-    nm = new NotificationsManager();
     loadConfirm(true);
   }
 
@@ -89,7 +87,7 @@ class Data {
     trackkeeper.writeAsString(stepsTaken.toString() + "/" + stepsToTake.toString());
 
     List<int> timeStamps = calcTimeStamps();
-    nm.spawnIsolate(timeStamps, map["days"], notificationsPlugin);
+    NotificationsManager.setNotifications(timeStamps, map["days"], notificationsPlugin);
 
     //scheduleNotification();
     //displayNotification();

@@ -10,7 +10,7 @@ class NotificationsManager {
 
   static final String iOSInAppNotifTitle = "Stand Up!";
   static final String iOSInAppNotifMsg = "Do it for the Motherland!";
-
+  
   Isolate isolate;
   ReceivePort rp;
   bool spawnedIsolate;
@@ -21,10 +21,12 @@ class NotificationsManager {
     rp.listen((message) {print(message);});
   }
 
-  static void setNotifications(Map<String,dynamic> message) async {
+  static void setNotifications(List<int> timeStamps, String days, FlutterLocalNotificationsPlugin notificationsPlugin) async {
+    /*
     List<int> timeStamps = message["timeStamps"];
     String days = message["days"];
     FlutterLocalNotificationsPlugin notificationsPlugin = message["notificationsPlugin"];
+    */
 
     // Cancel all previous notifications  
     await notificationsPlugin.cancelAll();
@@ -51,15 +53,13 @@ class NotificationsManager {
             );
             reply += "DAY $i H ${timeStamps[j] ~/ 60} M ${timeStamps[j] % 60} \n";
           } catch(e) {
-            message["sendPort"].send("[Set Failed]: "+e.message);
+            print("[Set Failed]: "+e.message);
           }
         }
       }
     }
-
-    message["sendPort"].send(reply);
   }
-
+  /*
   void spawnIsolate(List<int> timeStamps, String days, FlutterLocalNotificationsPlugin nP) async {
     //if (spawnedIsolate) terminateIsolate();
 
@@ -83,4 +83,5 @@ class NotificationsManager {
       isolate.kill(priority: Isolate.immediate);
     }
   }
+  */
 }
