@@ -1,12 +1,17 @@
 import 'dart:io';
 import 'dart:convert';
+import 'dart:math';
 import 'package:path_provider/path_provider.dart';
 
 class Data {
+  static List<String> keys = ["H", "M", "startHour", "startMin", "endHour", "endMin", "days"];
+
   Map<String, dynamic> map;
+  int stepsTaken;
+  int stepsToTake;
+
   String msg;
   Function loadConfirm;
-  List<String> keys = ["H", "M", "startHour", "startMin", "endHour", "endMin", "days"];
 
   Data() {
     msg = "";
@@ -14,7 +19,7 @@ class Data {
 
   void initState() async {
     try {
-      final File file = await _localFile;
+      final File file = await _localTimeFile;
       String contents = await file.readAsString();
       map = jsonDecode(contents);
       
@@ -29,13 +34,81 @@ class Data {
         "endMin": 0,
         "days": "1111100"
       };
+      stepsTaken = 0;
+      stepsToTake = 8;
     }
+    setSteps();
     loadConfirm(true);
   }
 
-  void setLoadConfirm(Function setLoaded) {
-    loadConfirm = setLoaded;
-    print("Set Load Confirmed");
+  static Future updateSteps(String payload) async {
+    final directory = await getApplicationDocumentsDirectory();
+    final File file = File('${directory.path}/tracker.txt');
+    String contents = await file.readAsString();
+    List<String> l = contents.split("/");
+    int stepsTaken = int.parse(l[0]);
+    int stepsToTake = int.parse(l[1]);
+    stepsTaken++;
+    if (stepsTaken > stepsToTake) {
+      stepsTaken = 0;
+    }
+    file.writeAsString(stepsTaken.toString() + "/" + stepsToTake.toString());
+  }
+
+  void setSteps() async {
+    try {
+      final File file = await _localTrackFile;
+      String contents = await file.readAsString();
+      List<String> l = contents.split("/");
+      stepsTaken = int.parse(l[0]);
+      stepsToTake = int.parse(l[1]);
+    } catch (e) {
+      calculateSteps();
+    }
+  }
+
+  void calculateSteps() {
+    stepsTaken = 0;
+    int intvl = (map["H"] * 60) + map["M"];
+    stepsToTake = getMaxInterval() ~/ intvl;
+  }
+
+  void writeData() async {
+    final File timekeeper = await _localTimeFile;
+    timekeeper.writeAsString(jsonEncode(map));
+
+    calculateSteps();
+    final File trackkeeper = await _localTrackFile;
+    trackkeeper.writeAsString(stepsTaken.toString() + "/" + stepsToTake.toString());
+  }
+
+  void scheduleNotifications() {
+    List<int> timeStamps = calcTimeStamps();
+  }
+
+  List<int> calcTimeStamps() {
+    int intvl = (map['H'] * 60) + map['M'];
+    int start = (map['startHour'] * 60) + map['startMin'];
+    int end = (map['endHour'] * 60) + map['endMin'];
+
+    List<int> timeStamps = new List();
+    
+    if (start < end) { // Day Shift
+      while(start <= end) {
+        timeStamps.add(start);
+        start += intvl;
+      }
+    } else if (start > end) { // Night Shift
+      while(start != end) {
+        timeStamps.add(start);
+        start += intvl;
+        if (start >= 24*60) {
+          start = 0;
+        }
+      }
+    }
+
+    return timeStamps;
   }
 
   bool isDataValid() {
@@ -55,13 +128,14 @@ class Data {
       msg = "Interval Minute must be between 0 and 59";
     }
 
-    // Check if end < start
+    /* Check if end < start
     if ((map["startHour"] > map["endHour"]) || ((map["startHour"] == map["endHour"]) && (map["startMin"] > map["endMin"]))) {
       msg = "End time must be greater than start time";
       return false;
     }
+    */
 
-  // Check if there is enough room for an interval between start and end
+    // Check if there is enough room for an interval between start and end
     if (getMaxInterval() < ((map["H"] * 60) + map["M"])) {
       msg = "Interval too large for chosen start and end times";
       return false;
@@ -74,24 +148,25 @@ class Data {
   String get getMsg {
     return msg;
   }
-
+  
   Future<String> get _localPath async {
     final directory = await getApplicationDocumentsDirectory();
-    print("got local path");
     return directory.path;
   }
 
-  Future<File> get _localFile async {
+  Future<File> get _localTimeFile async {
     final path = await _localPath;
-    print("got local file");
     return File('$path/timekeeper.txt');
   }
 
-  void writeData() async {
-    final File file = await _localFile;
+  Future<File> get _localTrackFile async {
+    final path = await _localPath;
+    return File('$path/tracker.txt');
+  }
 
-    file.writeAsString(jsonEncode(map));
-    print("file written");
+  void setLoadConfirm(Function setLoaded) {
+    loadConfirm = setLoaded;
+    print("Set Load Confirmed");
   }
 
   int getVal(String key) {
@@ -111,7 +186,12 @@ class Data {
   }
   
   int getMaxInterval() {
-    return ((map['endHour'] * 60) + map['endMin']) - 
-           ((map['startHour'] * 60) + map['startMin']);
+    return
+    max(
+      ((map['endHour'] * 60) + map['endMin'] - 
+       (map['startHour'] * 60) + map['startMin']),
+      ((map['startHour'] * 60) + map['startMin'] - 
+       (map['endHour'] * 60) + map['endMin'])
+    );
   }
 }

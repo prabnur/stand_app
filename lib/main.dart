@@ -14,23 +14,23 @@ class Home extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       color: Colors.white,
-      home: OptionsWrapper()
+      home: InitOptions()
     );
   }
 }
 
-class OptionsWrapper extends StatefulWidget {
+class InitOptions extends StatefulWidget {
   final Data D = new Data();
 
   @override
-  _OptionsWrapperState createState() => _OptionsWrapperState(D: this.D);
+  _InitOptions createState() => _InitOptions(D: this.D);
 }
 
-class _OptionsWrapperState extends State<OptionsWrapper> {
+class _InitOptions extends State<InitOptions> {
   bool loaded;
   final Data D;
 
-  _OptionsWrapperState({this.D});
+  _InitOptions({this.D});
 
   @override
   void initState() {

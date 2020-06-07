@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 class DayPickers extends StatelessWidget {
   final List<String> vals = new List(7);
   final List<String> days = List.unmodifiable(["M", "Tu", "W", "Th", "F", "Sa", "S"]);
-  final List<Widget> children = new List(7);
+  final List<Widget> dayPickerList = new List(7);
   final String init;
   final Function toggleDay;
 
@@ -16,8 +16,8 @@ class DayPickers extends StatelessWidget {
       assert(vals[i] == "1" || vals[i] == "0");
     }
 
-    for(int i=0; i<children.length; i++) {
-      children[i] = DayPicker(day: days[i], active: (vals[i] == "1"), toggle: () => {toggleDay(i)});
+    for(int i=0; i<dayPickerList.length; i++) {
+      dayPickerList[i] = DayPicker(day: days[i], active: (vals[i] == "1"), toggle: () => {toggleDay(i)});
     }
   }
 
@@ -26,7 +26,7 @@ class DayPickers extends StatelessWidget {
     return
     Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: children
+      children: dayPickerList
     );
   }
 }

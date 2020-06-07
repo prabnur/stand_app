@@ -46,26 +46,30 @@ class _Options extends State<Options> {
     D.setVal("${id}Min", newTime.minute);
   }
 
-  void displayMessage(String message) {
+  void displayMessage(String message, Color textCol) {
     Fluttertoast.showToast(
       msg: message,
       toastLength: Toast.LENGTH_LONG,
       gravity: ToastGravity.TOP,
       timeInSecForIosWeb: 3,
       backgroundColor: Colors.black,
-      textColor: Colors.red,
+      textColor: textCol,
       fontSize: 18
     );
   }
 
-  void confirm() {
+   void updateInterval() {
     if (hController.text != "") {
       D.setVal("H", int.parse(hController.text));
-    }
-    if (mController.text != "") {
+      D.setVal("M", (mController.text != "" ? int.parse(mController.text) : 0));
+    } else if (mController.text != "") {
+      D.setVal("H", 0);
       D.setVal("M", int.parse(mController.text));
     }
+  }
 
+  void confirm() {
+    updateInterval();
     D.setDays(days.join());
 
     if (D.isDataValid()) {
@@ -74,8 +78,9 @@ class _Options extends State<Options> {
         H = D.getVal("H");
         M = D.getVal("M");
       });
+      displayMessage("Changes Applied!", Colors.green);
     } else {
-      displayMessage(D.getMsg);
+      displayMessage(D.getMsg, Colors.red);
     }
   }
 
