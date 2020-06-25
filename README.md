@@ -1,6 +1,6 @@
 # stand_app
 
-A new Flutter project.
+An app that encourages its users to follow a more active lifestyle.
 
 ## Getting Started
 

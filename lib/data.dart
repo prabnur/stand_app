@@ -11,13 +11,12 @@ class Data {
   int stepsToTake;
 
   String msg;
-  Function loadConfirm;
 
   Data() {
     msg = "";
   }
 
-  void initState() async {
+  void initState(Function onFinished) async {
     try {
       final File file = await _localTimeFile;
       String contents = await file.readAsString();
@@ -38,7 +37,7 @@ class Data {
       stepsToTake = 8;
     }
     setSteps();
-    loadConfirm(true);
+    onFinished();
   }
 
   static Future updateSteps(String payload) async {
@@ -84,6 +83,7 @@ class Data {
 
   void scheduleNotifications() {
     List<int> timeStamps = calcTimeStamps();
+    List daysToRepeat = getDaysToRepeat();
   }
 
   List<int> calcTimeStamps() {
@@ -145,6 +145,8 @@ class Data {
     return true;
   }
 
+  // UTILITY FUNCTIONS
+
   String get getMsg {
     return msg;
   }
@@ -162,11 +164,6 @@ class Data {
   Future<File> get _localTrackFile async {
     final path = await _localPath;
     return File('$path/tracker.txt');
-  }
-
-  void setLoadConfirm(Function setLoaded) {
-    loadConfirm = setLoaded;
-    print("Set Load Confirmed");
   }
 
   int getVal(String key) {
@@ -201,5 +198,18 @@ class Data {
       ((map['startHour'] * 60) + map['startMin'] - 
        (map['endHour'] * 60) + map['endMin'])
     );
+  }
+
+  List getDaysToRepeat() {
+    String days = map["days"];
+    List allDays = [DateTime.monday, DateTime.tuesday, DateTime.wednesday, DateTime.thursday,
+      DateTime.friday, DateTime.saturday, DateTime.sunday];
+    List daysToRepeat;
+    for (int i=0; i<days.length; i++) {
+      if (days[i] == "1") {
+        daysToRepeat.add(allDays[i]);
+      }
+    }
+    return daysToRepeat;
   }
 }

@@ -1,0 +1,25 @@
+Cloud TODO
+
+TIME ZONE Motherfucker????????
+
+Messaging
+    set receivers
+
+Firstore
+    Timestamps Document
+        Each day of the week is a collection
+        Each collection has Timestamps (GMT) which is a topic ppl are ssubscribed to
+        Each timestamp has IDs / tokens associated with it
+    
+    ID Document
+        List of all the ids of alll the ppl using this shi
+
+    SECURE THIS BITCH (Last Step)
+
+Cloud Functions
+    Given the current collection, send messages to ppl subscribed
+    At the 24 hour mark change the collection
+    Add token and corresponding timestamps converted to GMT
+    Remove token and corresponding timestamps
+
+Ahh Shit here we go
