@@ -6,49 +6,88 @@ import 'package:flutter/material.dart';
 
 import 'data.dart';
 import 'options.dart';
+import 'tracker.dart';
 
-void main() => runApp(Home());
+void main() => runApp(Main());
 
-class Home extends StatelessWidget {
+class Main extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       color: Colors.white,
-      home: InitOptions()
+      home: Home()
     );
   }
 }
 
-class InitOptions extends StatefulWidget {
+class Home extends StatefulWidget {
   final Data D = new Data();
 
   @override
-  _InitOptions createState() => _InitOptions(D: this.D);
+  _Home createState() => _Home(D: this.D);
 }
 
-class _InitOptions extends State<InitOptions> {
-  bool loaded;
+class _Home extends State<Home> {
+  int stepsTaken;
+  int stepsToTake;
+  bool dataLoaded;
   final Data D;
 
-  _InitOptions({this.D});
+  _Home({this.D});
 
   @override
   void initState() {
     super.initState();
-    loaded = false;
-    D.setLoadConfirm(setLoaded);
-    D.initState();
+    dataLoaded = false;
+    D.initState(onFinishedDataLoad);
   }
 
-  void setLoaded(bool b) {
+  void onFinishedDataLoad() {
     setState(() {
-      loaded = b;
+      dataLoaded = true;
+      stepsTaken = D.stepsTaken;
+      stepsToTake = D.stepsToTake;
     });
-    print("Ready to display");
+    print("Data is loaded");
+  }
+
+  void takeStep() {
+    // TODO
+    int noop = 0;
   }
 
   @override
   Widget build(BuildContext context) {
-    return (loaded ? Options(D: this.D) : Scaffold(body: Text('Loading'))); // TO:DO add a loading screen
+    return Scaffold(
+      body: Stack(children: <Widget>[
+        CustomPaint(
+          painter: Tracker(),
+          child: Container(),
+        ),
+        Align(
+          alignment: Alignment.topRight,
+          child: IconButton(
+            icon: Icon(Icons.settings),
+            iconSize: 56,
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => Options(D: this.D)
+                )
+              );
+            }
+          ),
+        )
+      ]),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: null,
+        backgroundColor: Color(0xfffcec03),
+        label: Text('Stand',
+          style: TextStyle(
+            fontSize: 22, fontFamily: 'Roboto', color: Colors.black)),
+        tooltip: 'Press when you stand!'
+      )
+    ); // TODO add a loading screen
   }
 }

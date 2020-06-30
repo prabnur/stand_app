@@ -11,13 +11,12 @@ class Data {
   int stepsToTake;
 
   String msg;
-  Function loadConfirm;
 
   Data() {
     msg = "";
   }
 
-  void initState() async {
+  void initState(Function onFinished) async {
     try {
       final File file = await _localTimeFile;
       String contents = await file.readAsString();
@@ -38,7 +37,7 @@ class Data {
       stepsToTake = 8;
     }
     setSteps();
-    loadConfirm(true);
+    onFinished();
   }
 
   static Future updateSteps(String payload) async {
@@ -162,11 +161,6 @@ class Data {
   Future<File> get _localTrackFile async {
     final path = await _localPath;
     return File('$path/tracker.txt');
-  }
-
-  void setLoadConfirm(Function setLoaded) {
-    loadConfirm = setLoaded;
-    print("Set Load Confirmed");
   }
 
   int getVal(String key) {
