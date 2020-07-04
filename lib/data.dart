@@ -1,10 +1,21 @@
 import 'dart:io';
 import 'dart:convert';
 import 'dart:math';
+
 import 'package:path_provider/path_provider.dart';
 
+import 'notifications.dart';
+
 class Data {
-  static List<String> keys = ["H", "M", "startHour", "startMin", "endHour", "endMin", "days"];
+  static List<String> keys = [
+    "H",
+    "M",
+    "startHour",
+    "startMin",
+    "endHour",
+    "endMin",
+    "days"
+  ];
 
   Map<String, dynamic> map;
   int stepsTaken;
@@ -12,17 +23,20 @@ class Data {
 
   String msg;
 
+  NotificationsManager nm;
+
   Data() {
     msg = "";
+    nm = NotificationsManager();
   }
 
   void initState(Function onFinished) async {
+    var first_time = false;
     try {
       final File file = await _localTimeFile;
       String contents = await file.readAsString();
       map = jsonDecode(contents);
-      
-    } catch(e) {
+    } catch (e) {
       print("Could not read file");
       map = {
         "H": 1,
@@ -35,8 +49,10 @@ class Data {
       };
       stepsTaken = 0;
       stepsToTake = 8;
+      first_time = true;
     }
     setSteps();
+    nm.initState(first_time);
     onFinished();
   }
 
@@ -78,11 +94,14 @@ class Data {
 
     calculateSteps();
     final File trackkeeper = await _localTrackFile;
-    trackkeeper.writeAsString(stepsTaken.toString() + "/" + stepsToTake.toString());
+    trackkeeper
+        .writeAsString(stepsTaken.toString() + "/" + stepsToTake.toString());
+    scheduleNotifications();
   }
 
   void scheduleNotifications() {
     List<int> timeStamps = calcTimeStamps();
+    nm.scheduleNotifications(timeStamps, map["days"]);
   }
 
   List<int> calcTimeStamps() {
@@ -91,17 +110,19 @@ class Data {
     int end = (map['endHour'] * 60) + map['endMin'];
 
     List<int> timeStamps = new List();
-    
-    if (start < end) { // Day Shift
-      while(start <= end) {
+
+    if (start < end) {
+      // Day Shift
+      while (start <= end) {
         timeStamps.add(start);
         start += intvl;
       }
-    } else if (start > end) { // Night Shift
-      while(start != end) {
+    } else if (start > end) {
+      // Night Shift
+      while (start != end) {
         timeStamps.add(start);
         start += intvl;
-        if (start >= 24*60) {
+        if (start >= 24 * 60) {
           start = 0;
         }
       }
@@ -127,13 +148,6 @@ class Data {
       msg = "Interval Minute must be between 0 and 59";
     }
 
-    /* Check if end < start
-    if ((map["startHour"] > map["endHour"]) || ((map["startHour"] == map["endHour"]) && (map["startMin"] > map["endMin"]))) {
-      msg = "End time must be greater than start time";
-      return false;
-    }
-    */
-
     // Check if there is enough room for an interval between start and end
     if (getMaxInterval() < ((map["H"] * 60) + map["M"])) {
       msg = "Interval too large for chosen start and end times";
@@ -147,7 +161,7 @@ class Data {
   String get getMsg {
     return msg;
   }
-  
+
   Future<String> get _localPath async {
     final directory = await getApplicationDocumentsDirectory();
     return directory.path;
@@ -186,14 +200,16 @@ class Data {
             "day" : "night");
   }
   */
-  
+
   int getMaxInterval() {
-    return
-    max(
-      ((map['endHour'] * 60) + map['endMin'] - 
-       (map['startHour'] * 60) + map['startMin']),
-      ((map['startHour'] * 60) + map['startMin'] - 
-       (map['endHour'] * 60) + map['endMin'])
-    );
+    return max(
+        ((map['endHour'] * 60) +
+            map['endMin'] -
+            (map['startHour'] * 60) +
+            map['startMin']),
+        ((map['startHour'] * 60) +
+            map['startMin'] -
+            (map['endHour'] * 60) +
+            map['endMin']));
   }
 }
