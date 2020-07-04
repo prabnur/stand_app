@@ -1,16 +1,13 @@
-# stand_app
+# Stand App
 
-A new Flutter project.
+A project that encourages people with desk jobs to stand up. Studies have shown that prolonged periods of sitting can have a very detrimental effect on health. A [reference](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0080000) to one such study.
 
-## Getting Started
+You could say sitting thrillz. But it also killz.
 
-This project is a starting point for a Flutter application.
+## More Info
 
-A few resources to get you started if this is your first Flutter project:
+This project is still currently in development. Currently it is intended to be released on both Android and iOS
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+## Special Thanks
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+* [MaikuB](https://github.com/MaikuB) for his work on [flutter_local_notifications](https://pub.dev/packages/flutter_local_notification)
