@@ -88,6 +88,6 @@ class _Home extends State<Home> {
             fontSize: 22, fontFamily: 'Roboto', color: Colors.black)),
         tooltip: 'Press when you stand!'
       )
-    ); // TODO add a loading screen
+    ); // Maybe add a loading screen
   }
 }
