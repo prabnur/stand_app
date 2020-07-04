@@ -29,6 +29,8 @@ dependencies:
   cupertino_icons: ^0.1.3
   path_provider: ^1.6.7
   fluttertoast: ^4.0.0
+  flutter_local_notifications:
+    path: plugins/flutter_local_notifications
 
 dev_dependencies:
   flutter_test:
