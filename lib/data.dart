@@ -21,8 +21,7 @@ class Data {
       final File file = await _localTimeFile;
       String contents = await file.readAsString();
       map = jsonDecode(contents);
-      
-    } catch(e) {
+    } catch (e) {
       print("Could not read file");
       map = {
         "H": 1,
@@ -78,7 +77,8 @@ class Data {
 
     calculateSteps();
     final File trackkeeper = await _localTrackFile;
-    trackkeeper.writeAsString(stepsTaken.toString() + "/" + stepsToTake.toString());
+    trackkeeper
+        .writeAsString(stepsTaken.toString() + "/" + stepsToTake.toString());
   }
 
   void scheduleNotifications() {
@@ -92,17 +92,19 @@ class Data {
     int end = (map['endHour'] * 60) + map['endMin'];
 
     List<int> timeStamps = new List();
-    
-    if (start < end) { // Day Shift
-      while(start <= end) {
+
+    if (start < end) {
+      // Day Shift
+      while (start <= end) {
         timeStamps.add(start);
         start += intvl;
       }
-    } else if (start > end) { // Night Shift
-      while(start != end) {
+    } else if (start > end) {
+      // Night Shift
+      while (start != end) {
         timeStamps.add(start);
         start += intvl;
-        if (start >= 24*60) {
+        if (start >= 24 * 60) {
           start = 0;
         }
       }
@@ -150,7 +152,7 @@ class Data {
   String get getMsg {
     return msg;
   }
-  
+
   Future<String> get _localPath async {
     final directory = await getApplicationDocumentsDirectory();
     return directory.path;
@@ -182,30 +184,31 @@ class Data {
     map[key] = val;
   }
 
-  /*
-  String getShift() {
-    return (((map['endHour'] * 60) + map['endMin'] - 
-             (map['startHour'] * 60) + map['startMin']) >= 0 ?
-            "day" : "night");
-  }
-  */
-  
   int getMaxInterval() {
-    return
-    max(
-      ((map['endHour'] * 60) + map['endMin'] - 
-       (map['startHour'] * 60) + map['startMin']),
-      ((map['startHour'] * 60) + map['startMin'] - 
-       (map['endHour'] * 60) + map['endMin'])
-    );
+    return max(
+        ((map['endHour'] * 60) +
+            map['endMin'] -
+            (map['startHour'] * 60) +
+            map['startMin']),
+        ((map['startHour'] * 60) +
+            map['startMin'] -
+            (map['endHour'] * 60) +
+            map['endMin']));
   }
 
   List getDaysToRepeat() {
     String days = map["days"];
-    List allDays = [DateTime.monday, DateTime.tuesday, DateTime.wednesday, DateTime.thursday,
-      DateTime.friday, DateTime.saturday, DateTime.sunday];
+    List allDays = [
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+      "Sunday"
+    ];
     List daysToRepeat;
-    for (int i=0; i<days.length; i++) {
+    for (int i = 0; i < days.length; i++) {
       if (days[i] == "1") {
         daysToRepeat.add(allDays[i]);
       }

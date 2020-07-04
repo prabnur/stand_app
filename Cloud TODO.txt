@@ -3,7 +3,7 @@ Cloud TODO
 TIME ZONE Motherfucker????????
 
 Messaging
-    set receivers
+    set receivers DONE
 
 Firstore
     Timestamps Document
@@ -12,7 +12,7 @@ Firstore
         Each timestamp has IDs / tokens associated with it
     
     ID Document
-        List of all the ids of alll the ppl using this shi
+        List of all the ids of alll the ppl using this shi anf their tokens
 
     SECURE THIS BITCH (Last Step)
 

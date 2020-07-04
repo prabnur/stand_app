@@ -3,33 +3,19 @@
 // found in the LICENSE file.
 
 import 'package:flutter/material.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 
 import 'data.dart';
+import 'firestore.dart';
+import 'messaging.dart';
 import 'options.dart';
+import 'tracker.dart';
 
 void main() => runApp(Main());
 
 class Main extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      color: Colors.white,
-      home: Home()
-    );
-  }
-}
-
-class Tracker extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    // TODO: implement paint
-  }
-
-  @override
-  bool shouldRepaint(CustomPainter oldDelegate) {
-    // TODO: implement shouldRepaint
-    return false;
+    return MaterialApp(color: Colors.white, home: Home());
   }
 }
 
@@ -51,28 +37,7 @@ class _Home extends State<Home> {
     super.initState();
     dataLoaded = false;
     D.initState(onFinishedDataLoad);
-
-    final FirebaseMessaging _fcm = FirebaseMessaging();
-    
-    _fcm.configure(
-      onMessage: (Map<String, dynamic> message) async {
-        final snackBar = SnackBar(
-          content: Text('Get yo a\$\$ up!'),
-          action: SnackBarAction(
-            label: 'Ye\$\$ir',
-            onPressed: takeStep
-          ),
-        );
-        Scaffold.of(context).showSnackBar(snackBar);
-      },
-      // onBackgroundMessage: Wanna put something here Prab?,
-      onLaunch: (Map<String, dynamic> message) async {
-        print("onLaunch: $message");
-      },
-      onResume: (Map<String, dynamic> message) async {
-        print("onResume: $message");
-      }
-    );
+    FCM.configure();
   }
 
   void onFinishedDataLoad() {
@@ -92,8 +57,7 @@ class _Home extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack (
-        children: <Widget>[
+        body: Stack(children: <Widget>[
           CustomPaint(
             painter: Tracker(),
             child: Container(),
@@ -101,34 +65,23 @@ class _Home extends State<Home> {
           Align(
             alignment: Alignment.topRight,
             child: IconButton(
-              icon: Icon(Icons.settings),
-              iconSize: 56,
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => Options(D: this.D)
-                  )
-                );
-              }
-            ),
+                icon: Icon(Icons.settings),
+                iconSize: 56,
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => Options(D: this.D)));
+                }),
           )
-        ]
-      ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: null,
-        backgroundColor: Color(0xfffcec03),
-        label: Text(
-          'Stand',
-          style: TextStyle(
-            fontSize: 18,
-            fontFamily: 'Roboto',
-            color: Colors.black
-          )
-        ),
-        tooltip: 'Press when you stand!'
-      )
-    ); // TODO add a loading screen
+        ]),
+        floatingActionButton: FloatingActionButton.extended(
+            onPressed: null,
+            backgroundColor: Color(0xfffcec03),
+            label: Text('Stand',
+                style: TextStyle(
+                    fontSize: 18, fontFamily: 'Roboto', color: Colors.black)),
+            tooltip: 'Press when you stand!')); // TODO add a loading screen
   }
 }
 
