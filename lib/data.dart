@@ -51,9 +51,10 @@ class Data {
       stepsToTake = 8;
       first_time = true;
     }
-    setSteps();
-    nm.initState(first_time);
-    onFinished();
+    setSteps(() {
+      nm.initState(first_time);
+      onFinished();
+    });
   }
 
   static Future updateSteps(String payload) async {
@@ -70,7 +71,7 @@ class Data {
     file.writeAsString(stepsTaken.toString() + "/" + stepsToTake.toString());
   }
 
-  void setSteps() async {
+  Future<void> setSteps(Function onSetSteps) async {
     try {
       final File file = await _localTrackFile;
       String contents = await file.readAsString();
@@ -80,6 +81,8 @@ class Data {
     } catch (e) {
       calculateSteps();
     }
+    onSetSteps();
+    print("Steps to take (Data) $stepsToTake");
   }
 
   void calculateSteps() {
