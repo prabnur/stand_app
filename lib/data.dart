@@ -57,17 +57,11 @@ class Data {
     });
   }
 
-  static Future updateSteps(String payload) async {
+  void updateSteps(int sT, int sTT) async {
+    stepsTaken = sT;
+    stepsToTake = sTT;
     final directory = await getApplicationDocumentsDirectory();
     final File file = File('${directory.path}/tracker.txt');
-    String contents = await file.readAsString();
-    List<String> l = contents.split("/");
-    int stepsTaken = int.parse(l[0]);
-    int stepsToTake = int.parse(l[1]);
-    stepsTaken++;
-    if (stepsTaken > stepsToTake) {
-      stepsTaken = 0;
-    }
     file.writeAsString(stepsTaken.toString() + "/" + stepsToTake.toString());
   }
 
@@ -82,7 +76,6 @@ class Data {
       calculateSteps();
     }
     onSetSteps();
-    print("Steps to take (Data) $stepsToTake");
   }
 
   void calculateSteps() {

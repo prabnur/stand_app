@@ -4,6 +4,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:vector_math/vector_math.dart' as vmath;
+import 'dart:math';
 
 import 'data.dart';
 import 'options.dart';
@@ -62,7 +63,7 @@ class _Home extends State<Home> with TickerProviderStateMixin {
     print("Data is loaded");
     ac = AnimationController(
         duration: Duration(milliseconds: ANIMATION_DURATION * stepsToTake),
-        value: stepsTaken * (vmath.radians(360) / stepsToTake),
+        value: (stepsTaken - 1) / stepsToTake,
         vsync: this);
 
     animation = arcTween.animate(ac)
@@ -73,8 +74,8 @@ class _Home extends State<Home> with TickerProviderStateMixin {
             numActive++;
           });
           ac.stop();
-        }
-        else setState(() {});
+        } else
+          setState(() {});
       })
       ..addStatusListener((status) {
         if (status == AnimationStatus.completed) {
@@ -94,13 +95,12 @@ class _Home extends State<Home> with TickerProviderStateMixin {
 
   void takeStep() {
     // TODO
-    //var newStep = stepsTaken + 1;
-    // if (newStep > stepsToTake) newStep = 0;
     setState(() {
       stepsTaken++;
-      numActive = numActive == 0 ? numActive+1 : numActive;
+      numActive = numActive == 0 ? numActive + 1 : numActive;
     });
     if (stepsTaken > 1) ac.forward();
+    D.updateSteps(stepsTaken, stepsToTake);
   }
 
   @override
@@ -113,13 +113,14 @@ class _Home extends State<Home> with TickerProviderStateMixin {
               builder: (context, snapshot) {
                 return */
           CustomPaint(
-            painter: dataLoaded ?
-              Tracker(numActive, stepsToTake, animation.value) : LoadingScreen(),
+            painter: dataLoaded
+                ? Tracker(numActive, stepsToTake, animation.value)
+                : LoadingScreen(),
             child: Container(),
           ),
           //;}),
           Align(
-            alignment: Alignment.topRight,
+            alignment: Alignment.bottomLeft,
             child: IconButton(
                 icon: Icon(Icons.settings),
                 iconSize: 56,

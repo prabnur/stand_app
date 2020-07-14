@@ -5,8 +5,9 @@ import 'package:vector_math/vector_math.dart';
 class Tracker extends CustomPainter {
   static const SIDE_OFFSET = 90;
   static const STROKE_WIDTH_PRCNT = 15;
-  static const STEP_CIRCLE_RADIUS_PRCNT = 105;
-  static const STEP_STROKE_WIDTH_PRCNT = 25;
+  static const STEP_CIRCLE_RADIUS_PRCNT = 100;
+  static const STEP_SW_INACTIVE = 10;
+  static const STEP_SW_ACTIVE = 25;
   static const ANGLE_SHIFT = 90;
 
   static const INACTIVE_COLOUR = Color(0xff1d1ae8);
@@ -49,6 +50,7 @@ class Tracker extends CustomPainter {
 
     // Calculate points for the step circles
     var coordinates = List();
+    var angles = List();
     final double division = 360 / stepsToTake;
     for (double angle = 0; angle <= 360; angle += division) {
       var angleShifted = angle - ANGLE_SHIFT;
@@ -56,6 +58,7 @@ class Tracker extends CustomPainter {
       var x = radius * cos(angleShiftedRad);
       var y = radius * sin(angleShiftedRad);
       coordinates.add(Point(x, y));
+      angles.add(angle);
     }
 
     // Setup Paints for Step Circles
@@ -63,28 +66,29 @@ class Tracker extends CustomPainter {
     final stepCircleRadius = STEP_CIRCLE_RADIUS_PRCNT * (strokeWidth / 100);
     final stepPaintInactive = Paint()..color = INACTIVE_COLOUR;
     final stepPaintActive = Paint()..color = ACTIVE_COLOUR;
-    final stepOutlineLast = Paint()
+    final stepOutlineActive = Paint()
       ..color = DARK_OUTLINE_COLOUR
-      ..strokeWidth = STEP_STROKE_WIDTH_PRCNT * (stepCircleRadius / 100)
+      ..strokeWidth = STEP_SW_ACTIVE * (stepCircleRadius / 100)
       ..style = PaintingStyle.stroke;
     final stepOutline = Paint()
-      ..color = INACTIVE_COLOUR
-      ..strokeWidth = STEP_STROKE_WIDTH_PRCNT * (stepCircleRadius / 100)
+      ..color = DARK_OUTLINE_COLOUR
+      ..strokeWidth = STEP_SW_INACTIVE * (stepCircleRadius / 100)
       ..style = PaintingStyle.stroke;
-
+    double arcPos = 2 * pi * radius * (arcAngle / (2 * pi));
     // Draw step cricles
-    for (int pointIdx = coordinates.length-1; pointIdx >= 0; pointIdx--) {
+    for (int pointIdx = coordinates.length - 1; pointIdx >= 0; pointIdx--) {
       var point = coordinates[pointIdx];
+      double myPos = 2 * pi * radius * (angles[pointIdx] / 360.0);
+      bool amIActive = myPos - (stepCircleRadius * 0.80) <= arcPos;
+      if (pointIdx == 0) amIActive &= numActive >= 1;
       canvas.drawCircle(
           Offset(point.x + origin.dx, point.y + origin.dy),
           stepCircleRadius,
-          pointIdx <= numActive-1 ? stepPaintActive : stepPaintInactive);
-
+          amIActive ? stepPaintActive : stepPaintInactive);
       canvas.drawCircle(
           Offset(point.x + origin.dx, point.y + origin.dy),
           stepCircleRadius,
-          pointIdx == numActive-1 ? stepOutlineLast : stepOutline
-      );
+          amIActive ? stepOutlineActive : stepOutline);
     }
   }
 
