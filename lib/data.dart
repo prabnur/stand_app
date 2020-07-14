@@ -51,26 +51,21 @@ class Data {
       stepsToTake = 8;
       first_time = true;
     }
-    setSteps();
-    nm.initState(first_time);
-    onFinished();
+    setSteps(() {
+      nm.initState(first_time);
+      onFinished();
+    });
   }
 
-  static Future updateSteps(String payload) async {
+  void updateSteps(int sT, int sTT) async {
+    stepsTaken = sT;
+    stepsToTake = sTT;
     final directory = await getApplicationDocumentsDirectory();
     final File file = File('${directory.path}/tracker.txt');
-    String contents = await file.readAsString();
-    List<String> l = contents.split("/");
-    int stepsTaken = int.parse(l[0]);
-    int stepsToTake = int.parse(l[1]);
-    stepsTaken++;
-    if (stepsTaken > stepsToTake) {
-      stepsTaken = 0;
-    }
     file.writeAsString(stepsTaken.toString() + "/" + stepsToTake.toString());
   }
 
-  void setSteps() async {
+  Future<void> setSteps(Function onSetSteps) async {
     try {
       final File file = await _localTrackFile;
       String contents = await file.readAsString();
@@ -80,6 +75,7 @@ class Data {
     } catch (e) {
       calculateSteps();
     }
+    onSetSteps();
   }
 
   void calculateSteps() {
