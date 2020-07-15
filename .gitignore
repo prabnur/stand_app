@@ -45,3 +45,7 @@ app.*.map.json
 
 # VS Code
 **/.vscode
+
+# Image resources
+images
+icons

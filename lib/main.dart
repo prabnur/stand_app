@@ -3,7 +3,6 @@
 // found in the LICENSE file.
 
 import 'package:flutter/material.dart';
-import 'package:vector_math/vector_math.dart' as vmath;
 import 'dart:math';
 
 import 'data.dart';
@@ -30,7 +29,6 @@ class _Home extends State<Home> with TickerProviderStateMixin {
   // Basic State
   int stepsTaken;
   int stepsToTake;
-  int numActive;
   bool dataLoaded;
 
   // Model
@@ -41,6 +39,12 @@ class _Home extends State<Home> with TickerProviderStateMixin {
   Animation<double> animation;
   AnimationController ac;
   Tween<double> arcTween;
+
+  // Logo
+  Image logo;
+  static const LOGO_WIDTH = 1778.0;
+  static const LOGO_HEIGHT = 2459.0;
+  static const LOGO_SCALE_FACTOR = 0.10;
 
   _Home({this.D});
 
@@ -55,10 +59,8 @@ class _Home extends State<Home> with TickerProviderStateMixin {
     setState(() {
       stepsTaken = D.stepsTaken;
       stepsToTake = D.stepsToTake;
-      //print("Steps to take (Main) $stepsToTake");
       dataLoaded = true;
-      numActive = stepsTaken;
-      arcTween = Tween(begin: 0, end: vmath.radians(360));
+      arcTween = Tween(begin: 0, end: 2 * pi);
     });
     print("Data is loaded");
     ac = AnimationController(
@@ -68,23 +70,16 @@ class _Home extends State<Home> with TickerProviderStateMixin {
 
     animation = arcTween.animate(ac)
       ..addListener(() {
-        if (animation.value >=
-            arcTween.transform((stepsTaken - 1) * 1.0 / stepsToTake)) {
-          setState(() {
-            numActive++;
-          });
+        if (animation.value >= arcTween.transform((stepsTaken) * 1.0 / stepsToTake))
           ac.stop();
-        } else
-          setState(() {});
+        setState(() {});
       })
       ..addStatusListener((status) {
         if (status == AnimationStatus.completed) {
           ac.reset();
           stepsTaken = 0;
-          numActive = 0;
         }
       });
-    print(animation == null ? 'animation null' : 'animation good');
   }
 
   @override
@@ -94,31 +89,38 @@ class _Home extends State<Home> with TickerProviderStateMixin {
   }
 
   void takeStep() {
-    // TODO
-    setState(() {
-      stepsTaken++;
-      numActive = numActive == 0 ? numActive + 1 : numActive;
-    });
-    if (stepsTaken > 1) ac.forward();
-    D.updateSteps(stepsTaken, stepsToTake);
+    stepsTaken++;
+    if (stepsTaken == stepsToTake)
+      D.updateSteps(0, stepsToTake);
+    else
+      D.updateSteps(stepsTaken, stepsToTake);
+    ac.forward();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         body: Stack(children: <Widget>[
-          /*
-          AnimatedBuilder(
-              animation: animation,
-              builder: (context, snapshot) {
-                return */
+          Align(
+            alignment: Alignment(0, -0.80),
+            child: Text(
+              'Breathe',
+              style: TextStyle(fontFamily: "RobotoMono", fontSize: 42),
+            ),
+          ),
+          Align(
+            alignment: Alignment.center,
+            child: Image.asset('images/logo.png',
+                width: LOGO_WIDTH * LOGO_SCALE_FACTOR,
+                height: LOGO_HEIGHT * LOGO_SCALE_FACTOR,
+                repeat: ImageRepeat.noRepeat),
+          ),
           CustomPaint(
             painter: dataLoaded
-                ? Tracker(numActive, stepsToTake, animation.value)
+                ? Tracker(stepsToTake, animation.value)
                 : LoadingScreen(),
             child: Container(),
           ),
-          //;}),
           Align(
             alignment: Alignment.bottomLeft,
             child: IconButton(
