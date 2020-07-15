@@ -4,44 +4,29 @@ import 'package:flutter/material.dart';
 
 import 'data.dart';
 import 'timepicker.dart';
+import 'toggleoptions.dart';
 import 'intervalpicker.dart';
 import 'dayspicker.dart';
 
-class Options extends StatefulWidget {
-  final Data D;
-
-  Options({this.D});
-
-  @override
-  _Options createState() => _Options(D: this.D);
-}
-
-class _Options extends State<Options> {
+// ignore: must_be_immutable
+class Options extends StatelessWidget {
   static const START = 'start';
   static const END = 'end';
 
   final Data D;
-  final hController = TextEditingController();
-  final mController = TextEditingController();
   final List<String> days = new List(7);
-  int h;
-  int m;
 
-  _Options({this.D}) {
-    h = D.h;
-    m = D.m;
+  Function updateInterval;
+  void setUpdateInterval(updInt) {
+    updateInterval = updInt;
+  }
+
+  Options({this.D}) {
     String dayString = D.days;
 
     for(int i=0; i<dayString.length; i++) {
       days[i] = dayString[i];
     }
-  }
-
-  @override
-  void dispose() {
-    hController.dispose();
-    mController.dispose();
-    super.dispose();
   }
 
   void setTime(String id, TimeOfDay newTime) {
@@ -66,26 +51,11 @@ class _Options extends State<Options> {
     );
   }
 
-  void updateInterval() {
-    if (hController.text != '') {
-      D.h = int.parse(hController.text);
-      D.m = mController.text != '' ? int.parse(mController.text) : 0;
-    } else if (mController.text != '') {
-      D.h = 0;
-      D.m = int.parse(mController.text);
-    }
-  }
-
   void confirm() {
     updateInterval();
     D.days = days.join();
-
     if (D.isDataValid()) {
       D.writeData();
-      setState(() {
-        h = D.h;
-        m = D.m;
-      });
       displayMessage('Changes Applied!', Colors.green);
     } else {
       displayMessage(D.msg, Colors.red);
@@ -100,6 +70,7 @@ class _Options extends State<Options> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
+            ToggleOptions(D: D),
 
             TimePicker(
               id: 'start',
@@ -113,28 +84,9 @@ class _Options extends State<Options> {
               D: this.D
             ),
 
-            Container(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: <Widget>[
-
-                  Text(
-                    'Currently Every \n $h Hr $m Min',
-                    style: TextStyle(
-                      fontSize: 25,
-                      fontFamily: 'Roboto',
-                      color: Colors.black
-                    )
-                  ),
-
-                  IntervalPicker(hController: this.hController, mController: this.mController, D: D)
+            IntervalPicker(setUpdateInterval: setUpdateInterval, D: D),
                   
-                ],
-              )
-            ),
-
             DayPickers(init: days.join(), toggleDay: (int idx) => {days[idx] = days[idx] == '1' ? '0' : '1'}),
-
             // End Buttons
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
