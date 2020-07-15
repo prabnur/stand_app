@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'dart:math';
 
 import 'data.dart';
-import 'options.dart';
+import 'tray.dart';
 import 'tracker.dart';
 
 void main() => runApp(Main());
@@ -62,7 +62,7 @@ class _Home extends State<Home> with TickerProviderStateMixin {
       dataLoaded = true;
       arcTween = Tween(begin: 0, end: 2 * pi);
     });
-    print("Data is loaded");
+    print('Data is loaded');
     ac = AnimationController(
         duration: Duration(milliseconds: ANIMATION_DURATION * stepsToTake),
         value: (stepsTaken - 1) / stepsToTake,
@@ -105,7 +105,7 @@ class _Home extends State<Home> with TickerProviderStateMixin {
             alignment: Alignment(0, -0.80),
             child: Text(
               'Breathe',
-              style: TextStyle(fontFamily: "RobotoMono", fontSize: 42),
+              style: TextStyle(fontFamily: 'RobotoMono', fontSize: 42),
             ),
           ),
           Align(
@@ -121,18 +121,7 @@ class _Home extends State<Home> with TickerProviderStateMixin {
                 : LoadingScreen(),
             child: Container(),
           ),
-          Align(
-            alignment: Alignment.bottomLeft,
-            child: IconButton(
-                icon: Icon(Icons.settings),
-                iconSize: 56,
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => Options(D: this.D)));
-                }),
-          )
+          Tray(D: this.D)
         ]),
         floatingActionButton: FloatingActionButton.extended(
             onPressed: takeStep,

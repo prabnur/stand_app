@@ -86,7 +86,7 @@ class Tracker extends CustomPainter {
       canvas.drawCircle(position, stepCircleRadius,
           amIActive ? stepOutlineActive : stepOutline);
       /*  
-      TextSpan span = new TextSpan(text: "$pointIdx: ${angles[pointIdx]}", style: TextStyle(color: Colors.black));
+      TextSpan span = new TextSpan(text: '$pointIdx: ${angles[pointIdx]}', style: TextStyle(color: Colors.black));
       TextPainter tp = new TextPainter(text: span, textAlign: TextAlign.left, textDirection: TextDirection.ltr);
       tp.layout();
       tp.paint(canvas, position);
