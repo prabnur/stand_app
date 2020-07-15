@@ -75,7 +75,11 @@ class Description extends StatelessWidget {
   Widget build(BuildContext context) {
     return
     AlertDialog(
-      contentPadding: const EdgeInsets.all(CONTENT_PAD),
+      contentPadding: const EdgeInsets.only(
+        top: CONTENT_PAD,
+        left: CONTENT_PAD,
+        right: CONTENT_PAD
+      ),
       elevation: ELEVATION,
       shape: RoundedRectangleBorder(
         side: BorderSide(color: Colors.black, width: BORDER_WIDTH),
@@ -94,7 +98,8 @@ class Description extends StatelessWidget {
             TextSpan(text: 'after the '),
             TextSpan(text: 'Start Time ', style: TextStyle(fontWeight: FontWeight.bold)),
             TextSpan(text: 'up till the '),
-            TextSpan(text: 'End Time ', style: TextStyle(fontWeight: FontWeight.bold)),
+            TextSpan(text: 'End Time', style: TextStyle(fontWeight: FontWeight.bold)),
+            TextSpan(text: '.')
           ],
         ),
       ),
@@ -106,7 +111,8 @@ class Description extends StatelessWidget {
           ),
           padding: EdgeInsets.all(ACTIONS_PAD),
         )
-      ],  
+      ],
+      
     );
   }
 }
