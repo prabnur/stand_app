@@ -17,17 +17,20 @@ class Options extends StatefulWidget {
 }
 
 class _Options extends State<Options> {
+  static const START = 'start';
+  static const END = 'end';
+
   final Data D;
   final hController = TextEditingController();
   final mController = TextEditingController();
   final List<String> days = new List(7);
-  int H;
-  int M;
+  int h;
+  int m;
 
   _Options({this.D}) {
-    H = D.getVal("H");
-    M = D.getVal("M");
-    String dayString = D.getDays();
+    h = D.h;
+    m = D.m;
+    String dayString = D.days;
 
     for(int i=0; i<dayString.length; i++) {
       days[i] = dayString[i];
@@ -42,8 +45,13 @@ class _Options extends State<Options> {
   }
 
   void setTime(String id, TimeOfDay newTime) {
-    D.setVal("${id}Hour", newTime.hour);
-    D.setVal("${id}Min", newTime.minute);
+    if(id == START) {
+      D.startHour = newTime.hour;
+      D.startMin = newTime.minute;
+    } else if (id == END) {
+      D.endHour = newTime.hour;
+      D.endMin = newTime.minute;
+    }
   }
 
   void displayMessage(String message, Color textCol) {
@@ -59,28 +67,28 @@ class _Options extends State<Options> {
   }
 
   void updateInterval() {
-    if (hController.text != "") {
-      D.setVal("H", int.parse(hController.text));
-      D.setVal("M", (mController.text != "" ? int.parse(mController.text) : 0));
-    } else if (mController.text != "") {
-      D.setVal("H", 0);
-      D.setVal("M", int.parse(mController.text));
+    if (hController.text != '') {
+      D.h = int.parse(hController.text);
+      D.m = mController.text != '' ? int.parse(mController.text) : 0;
+    } else if (mController.text != '') {
+      D.h = 0;
+      D.m = int.parse(mController.text);
     }
   }
 
   void confirm() {
     updateInterval();
-    D.setDays(days.join());
+    D.days = days.join();
 
     if (D.isDataValid()) {
       D.writeData();
       setState(() {
-        H = D.getVal("H");
-        M = D.getVal("M");
+        h = D.h;
+        m = D.m;
       });
-      displayMessage("Changes Applied!", Colors.green);
+      displayMessage('Changes Applied!', Colors.green);
     } else {
-      displayMessage(D.getMsg, Colors.red);
+      displayMessage(D.msg, Colors.red);
     }
   }
 
@@ -93,17 +101,15 @@ class _Options extends State<Options> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
 
-            Description(),
-
             TimePicker(
-              id: "start",
-              selectTime: (TimeOfDay newTime) => {setTime("start", newTime)},
+              id: 'start',
+              selectTime: (TimeOfDay newTime) => {setTime('start', newTime)},
               D: this.D
             ),
 
             TimePicker(
-              id: "end",
-              selectTime: (TimeOfDay newTime) => {setTime("end", newTime)},
+              id: 'end',
+              selectTime: (TimeOfDay newTime) => {setTime('end', newTime)},
               D: this.D
             ),
 
@@ -113,7 +119,7 @@ class _Options extends State<Options> {
                 children: <Widget>[
 
                   Text(
-                    'Currently Every \n $H Hr $M Min',
+                    'Currently Every \n $h Hr $m Min',
                     style: TextStyle(
                       fontSize: 25,
                       fontFamily: 'Roboto',
@@ -127,8 +133,9 @@ class _Options extends State<Options> {
               )
             ),
 
-            DayPickers(init: days.join(), toggleDay: (int idx) => {days[idx] = days[idx] == "1" ? "0" : "1"}),
+            DayPickers(init: days.join(), toggleDay: (int idx) => {days[idx] = days[idx] == '1' ? '0' : '1'}),
 
+            // End Buttons
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
@@ -162,36 +169,6 @@ class _Options extends State<Options> {
 
           ],
         )
-      )
-    );
-  }
-}
-
-class Description extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    const double margin = 20;
-    const double fontSize = 26;
-    return
-    Container(
-      margin: const EdgeInsets.only(left: margin, right: margin), 
-      child: RichText(
-        text: TextSpan(
-          text: 'This app will remind you to stand at every ',
-          style: 
-            TextStyle(
-              color: Colors.black,
-              fontFamily: 'Roboto',
-              fontSize: fontSize
-            ),
-          children: <TextSpan> [
-            TextSpan(text: 'interval ', style: TextStyle(fontWeight: FontWeight.bold)),
-            TextSpan(text: 'after the '),
-            TextSpan(text: 'Start Time ', style: TextStyle(fontWeight: FontWeight.bold)),
-            TextSpan(text: 'up till the '),
-            TextSpan(text: 'End Time ', style: TextStyle(fontWeight: FontWeight.bold)),
-          ],
-        ),
       )
     );
   }

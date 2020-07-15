@@ -5,10 +5,10 @@ import 'package:fluttertoast/fluttertoast.dart';
 class NotificationsManager {
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 
-  static final NOTIFICATION_TITLE = "Stand Up!";
-  static final NOTIFICATION_MESSAGE = "You got this!!";
+  static final NOTIFICATION_TITLE = 'Stand Up!';
+  static final NOTIFICATION_MESSAGE = 'You got this! Reminder for ';
   static final IN_APP_NOTIFICATION_MESSAGE =
-      "Rise and shine! Hit the Stand button.";
+      'Rise and shine! Hit the Stand button.';
 
   static final ANDROID_CHANNEL_ID = 'channel1';
   static final ANDROID_CHANNEL_NAME = 'Basic';
@@ -26,14 +26,14 @@ class NotificationsManager {
         fontSize: 18);
   }
 
-  void initState(bool first_time) async {
+  void initState(bool firstTime) async {
     flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
     // initialise the plugin. app_icon needs to be a added as a drawable resource to the Android head project
     var initializationSettingsAndroid =
         AndroidInitializationSettings('@mipmap/ic_launcher');
 
     var initializationSettingsIOS;
-    if (first_time) {
+    if (firstTime) {
       initializationSettingsIOS = IOSInitializationSettings(
           requestSoundPermission: true,
           requestBadgePermission: true,
@@ -49,7 +49,6 @@ class NotificationsManager {
     var initializationSettings = InitializationSettings(
         initializationSettingsAndroid, initializationSettingsIOS);
     await flutterLocalNotificationsPlugin.initialize(initializationSettings);
-    weeklyInAMinute();
   }
 
   NotificationDetails getPlatformChannelSpecifics() {
@@ -67,7 +66,7 @@ class NotificationsManager {
         getPlatformChannelSpecifics();
     await flutterLocalNotificationsPlugin
         .cancelAll()
-        .then((value) => print("Old Notifications cancelled."));
+        .then((value) => print('Old Notifications cancelled.'));
     var allDays = [
       Day.Monday,
       Day.Tuesday,
@@ -84,35 +83,25 @@ class NotificationsManager {
         var h = timeStamps[tsIndex] ~/ 60;
         var m = timeStamps[tsIndex] % 60;
         var time = Time(h, m, 0);
-        print("${(time.hour)}:${(time.minute)}");
+        print('$h:$m');
         await flutterLocalNotificationsPlugin
             .showWeeklyAtDayAndTime(
                 count,
-                'scheduled title',
-                'Weekly notification shown on Monday at approximately ${(time.hour)}:${(time.minute)}',
-                Day.Saturday,
+                NOTIFICATION_TITLE,
+                NOTIFICATION_MESSAGE + '$h:$m',
+                allDays[dayIndex],
                 time,
                 platformChannelSpecifics)
             .then((value) =>
-                print("Notification set for ${(time.hour)}:${(time.minute)}"));
-
+                print('Notification set for $h:$m'));
         count++;
       }
     }
   }
 
-  void weeklyInAMinute() async {
-    var scheduledNotificationDateTime =
-        DateTime.now().add(Duration(minutes: 1));
-    var time = Time(3, 12, 0);
-    NotificationDetails platformChannelSpecifics =
-        getPlatformChannelSpecifics();
-    await flutterLocalNotificationsPlugin.showWeeklyAtDayAndTime(
-        0,
-        NOTIFICATION_TITLE,
-        NOTIFICATION_MESSAGE + ' ${(time.hour)}:${(time.minute)}',
-        Day.Saturday,
-        time,
-        platformChannelSpecifics);
+  void cancelAll() async {
+    await flutterLocalNotificationsPlugin
+        .cancelAll()
+        .then((value) => print('Old Notifications cancelled.'));
   }
 }

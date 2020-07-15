@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 class DayPickers extends StatelessWidget {
   final List<String> vals = new List(7);
-  final List<String> days = List.unmodifiable(["M", "Tu", "W", "Th", "F", "Sa", "S"]);
+  final List<String> days = List.unmodifiable(['M', 'Tu', 'W', 'Th', 'F', 'Sa', 'S']);
   final List<Widget> dayPickerList = new List(7);
   final String init;
   final Function toggleDay;
@@ -13,11 +13,11 @@ class DayPickers extends StatelessWidget {
 
     for(int i=0; i<init.length; i++) {
       vals[i] = init[i];
-      assert(vals[i] == "1" || vals[i] == "0");
+      assert(vals[i] == '1' || vals[i] == '0');
     }
 
     for(int i=0; i<dayPickerList.length; i++) {
-      dayPickerList[i] = DayPicker(day: days[i], active: (vals[i] == "1"), toggle: () => {toggleDay(i)});
+      dayPickerList[i] = DayPicker(day: days[i], active: (vals[i] == '1'), toggle: () => {toggleDay(i)});
     }
   }
 
@@ -42,7 +42,7 @@ class DayPicker extends StatefulWidget {
 
 class _DayPicker extends State<DayPicker> {
   bool active;
-  final double size = 50;
+  static const double MIN_WIDTH = 50;
   final Function toggle;
 
   _DayPicker({this.active, this.toggle});
@@ -61,13 +61,13 @@ class _DayPicker extends State<DayPicker> {
       onPressed: press,
       elevation: 2.0,
       color: (active ? Colors.black : Colors.white),
-      minWidth: size,
-      height: size,
+      minWidth: MIN_WIDTH,
+      height: MIN_WIDTH,
       shape: CircleBorder(side: BorderSide(color: Colors.black, width: 3)),//CircleBorder(side: BorderSide(color: Colors.black)),
       child: Text(
         widget.day,
         style: TextStyle(
-          fontFamily: "Robato",
+          fontFamily: 'Robato',
           fontSize: 20,
           color: (active ? Colors.white : Colors.black)
         ),

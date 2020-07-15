@@ -3,13 +3,18 @@ import 'package:flutter/material.dart';
 import 'data.dart';
 
 class TimePicker extends StatefulWidget {
+  static const START = 'start';
+  static const END = 'end';
   final String id;
   final Function selectTime;
   final Data D;
 
   TimePicker({this.id, this.selectTime, this.D});
   @override
-  _TimePickerState createState() => _TimePickerState(D.getVal("${id}Hour"), D.getVal("${id}Min"), selectTime);
+  _TimePickerState createState() => (id == START ?
+    _TimePickerState(D.startHour, D.startMin, selectTime):
+    _TimePickerState(D.endHour, D.endMin, selectTime)
+  );
 }
 
 class _TimePickerState extends State<TimePicker> {
@@ -34,9 +39,9 @@ class _TimePickerState extends State<TimePicker> {
   String parseString() {
     int h = selectedTime.hour;
     int m = selectedTime.minute;
-    String suffix = " AM";
+    String suffix = ' AM';
     if (h>12) {
-      suffix = " PM";
+      suffix = ' PM';
       h = h % 12;
     }
     if(h<10) {
@@ -62,7 +67,7 @@ class _TimePickerState extends State<TimePicker> {
             onPressed: () => {_openTimePicker(context)},
             padding: EdgeInsets.all(12),
             child: Text(
-              widget.id == "start" ? "Pick Start Time" : "Pick End Time",
+              widget.id == 'start' ? 'Pick Start Time' : 'Pick End Time',
               style: TextStyle(
                 fontSize: 20,
                 fontFamily: 'Roboto',

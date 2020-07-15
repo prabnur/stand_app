@@ -16,9 +16,9 @@ class IntervalPicker extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       mainAxisSize: MainAxisSize.max,
       children: <Widget>[
-        IntervalInput(id: "H", myController: hController),
+        IntervalInput(id: 'H', myController: hController),
         SizedBox(height: 20),
-        IntervalInput(id: "M", myController: mController)
+        IntervalInput(id: 'M', myController: mController)
       ],
     );   
   }
