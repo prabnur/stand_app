@@ -16,9 +16,9 @@ class DayPickers extends StatelessWidget {
       assert(vals[i] == '1' || vals[i] == '0');
     }
 
-    for(int i=0; i<dayPickerList.length; i++) {
+    for(int i=0; i<dayPickerList.length; i++) 
       dayPickerList[i] = DayPicker(day: days[i], active: (vals[i] == '1'), toggle: () => {toggleDay(i)});
-    }
+    
   }
 
   @override
