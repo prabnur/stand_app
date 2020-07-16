@@ -97,7 +97,7 @@ class Data {
         .writeAsString(stepsTaken.toString() + '/' + stepsToTake.toString());
 
     // Schedule Notifications
-    nm.scheduleNotifications(calcTimeStamps(), days);
+    if(notifyMe) nm.scheduleNotifications(calcTimeStamps(), days);
   }
 
   List<int> calcTimeStamps() {
