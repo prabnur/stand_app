@@ -35,7 +35,8 @@ class _Home extends State<Home> with TickerProviderStateMixin {
   final Data D;
 
   // Animation stuff
-  static const ANIMATION_DURATION = 700; // ms
+  static const STEP_DURATION = 100;
+  int animationDuration; // ms
   Animation<double> animation;
   AnimationController ac;
   Tween<double> arcTween;
@@ -61,12 +62,14 @@ class _Home extends State<Home> with TickerProviderStateMixin {
       stepsToTake = D.stepsToTake;
       dataLoaded = true;
       arcTween = Tween(begin: 0, end: 2 * pi);
+      animationDuration = STEP_DURATION * stepsToTake;
     });
     print('Data is loaded');
     ac = AnimationController(
-        duration: Duration(milliseconds: ANIMATION_DURATION * stepsToTake),
-        value: (stepsTaken - 1) / stepsToTake,
-        vsync: this);
+      duration: Duration(milliseconds: animationDuration * stepsToTake),
+      value: (stepsTaken - 1) / stepsToTake,
+      vsync: this
+    );
 
     animation = arcTween.animate(ac)
       ..addListener(() {
@@ -126,9 +129,15 @@ class _Home extends State<Home> with TickerProviderStateMixin {
         floatingActionButton: FloatingActionButton.extended(
             onPressed: takeStep,
             backgroundColor: Color(0xfffcec03),
-            label: Text('Stand',
-                style: TextStyle(
-                    fontSize: 22, fontFamily: 'Roboto', color: Colors.black)),
+            elevation: 5,
+            label: Text(
+              'Stand',
+              style: TextStyle(
+                fontSize: 22,
+                fontFamily: 'Roboto',
+                color: Colors.black
+              )
+            ),
             tooltip: 'Press when you stand!')); // Maybe add a loading screen
   }
 }

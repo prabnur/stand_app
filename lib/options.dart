@@ -24,9 +24,9 @@ class Options extends StatelessWidget {
   Options({this.D}) {
     String dayString = D.days;
 
-    for(int i=0; i<dayString.length; i++) {
+    for(int i=0; i<dayString.length; i++)
       days[i] = dayString[i];
-    }
+    
   }
 
   void setTime(String id, TimeOfDay newTime) {

@@ -5,14 +5,14 @@ import 'package:fluttertoast/fluttertoast.dart';
 class NotificationsManager {
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 
-  static final NOTIFICATION_TITLE = 'Stand Up!';
-  static final NOTIFICATION_MESSAGE = 'You got this! Reminder for ';
-  static final IN_APP_NOTIFICATION_MESSAGE =
+  static const NOTIFICATION_TITLE = 'Stand Up!';
+  static const NOTIFICATION_MESSAGE = 'You got this! Reminder for ';
+  static const IN_APP_NOTIFICATION_MESSAGE =
       'Rise and shine! Hit the Stand button.';
 
-  static final ANDROID_CHANNEL_ID = 'channel1';
-  static final ANDROID_CHANNEL_NAME = 'Basic';
-  static final ANDROID_CHANNEL_DESCRIPTION = 'Does anyone even look at this?';
+  static const ANDROID_CHANNEL_ID = 'channel1';
+  static const ANDROID_CHANNEL_NAME = 'Basic';
+  static const ANDROID_CHANNEL_DESCRIPTION = 'Does anyone even look at this?';
 
   Future<void> onDidReceiveLocalNotification(
       int id, String title, String body, String payload) {

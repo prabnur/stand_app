@@ -25,6 +25,8 @@ class Data {
 
   NotificationsManager nm;
 
+  Function resetTrackerAnimation;
+
   Data() {
     msg = '';
     nm = NotificationsManager();
@@ -32,6 +34,7 @@ class Data {
 
   void initState(Function onFinished) async {
     var firstTime = false;
+    resetTrackerAnimation = onFinished;
     try {
       final File file = await getFile('config');
       String contents = await file.readAsString();
@@ -83,6 +86,7 @@ class Data {
     stepsTaken = 0;
     int intvl = (h * 60) + m;
     stepsToTake = getMaxInterval() ~/ intvl;
+    resetTrackerAnimation();
   }
 
   void writeData() async {
@@ -97,7 +101,7 @@ class Data {
         .writeAsString(stepsTaken.toString() + '/' + stepsToTake.toString());
 
     // Schedule Notifications
-    nm.scheduleNotifications(calcTimeStamps(), days);
+    if (notifyMe) nm.scheduleNotifications(calcTimeStamps(), days);
   }
 
   List<int> calcTimeStamps() {
@@ -185,8 +189,10 @@ class Data {
   }
 
   set notify(bool newNotifyMe) {
-    if (notifyMe) nm.cancelAll();
-    else nm.scheduleNotifications(calcTimeStamps(), days);
+    if (notifyMe)
+      nm.cancelAll();
+    else
+      nm.scheduleNotifications(calcTimeStamps(), days);
     notifyMe = newNotifyMe;
   }
 }
