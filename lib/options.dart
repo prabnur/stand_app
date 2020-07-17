@@ -12,6 +12,7 @@ import 'dayspicker.dart';
 class Options extends StatelessWidget {
   static const START = 'start';
   static const END = 'end';
+  static const GAP = 65.0;
 
   final Data D;
   final List<String> days = new List(7);
@@ -23,14 +24,11 @@ class Options extends StatelessWidget {
 
   Options({this.D}) {
     String dayString = D.days;
-
-    for(int i=0; i<dayString.length; i++)
-      days[i] = dayString[i];
-    
+    for (int i = 0; i < dayString.length; i++) days[i] = dayString[i];
   }
 
   void setTime(String id, TimeOfDay newTime) {
-    if(id == START) {
+    if (id == START) {
       D.startHour = newTime.hour;
       D.startMin = newTime.minute;
     } else if (id == END) {
@@ -41,14 +39,13 @@ class Options extends StatelessWidget {
 
   void displayMessage(String message, Color textCol) {
     Fluttertoast.showToast(
-      msg: message,
-      toastLength: Toast.LENGTH_LONG,
-      gravity: ToastGravity.TOP,
-      timeInSecForIosWeb: 3,
-      backgroundColor: Colors.black,
-      textColor: textCol,
-      fontSize: 18
-    );
+        msg: message,
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.TOP,
+        timeInSecForIosWeb: 3,
+        backgroundColor: Colors.black,
+        textColor: textCol,
+        fontSize: 18);
   }
 
   void confirm() {
@@ -64,64 +61,58 @@ class Options extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return
-    Scaffold (
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            ToggleOptions(D: D),
+    List optionWidgets = [
+      ToggleOptions(D: D),
 
-            TimePicker(
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        mainAxisSize: MainAxisSize.max,
+        children: <Widget>[
+          TimePicker(
               id: 'start',
               selectTime: (TimeOfDay newTime) => {setTime('start', newTime)},
-              D: this.D
-            ),
-
-            TimePicker(
+              D: this.D),
+          TimePicker(
               id: 'end',
               selectTime: (TimeOfDay newTime) => {setTime('end', newTime)},
-              D: this.D
-            ),
+              D: this.D),
+        ],
+      ),
 
-            IntervalPicker(setUpdateInterval: setUpdateInterval, D: D),
-                  
-            DayPickers(init: days.join(), toggleDay: (int idx) => {days[idx] = days[idx] == '1' ? '0' : '1'}),
-            // End Buttons
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: <Widget>[
+      IntervalPicker(setUpdateInterval: setUpdateInterval, D: D),
 
-                RaisedButton(
-                  onPressed: () => {Navigator.pop(context)},
-                  padding: EdgeInsets.all(12),
-                  child: Text(
-                    'Back',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontFamily: 'Roboto'
-                    ),
-                  )
-                ),
-
-                RaisedButton(
-                  onPressed: confirm,
-                  padding: EdgeInsets.all(12),
-                  child: Text(
-                    'Confirm',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontFamily: 'Roboto'
-                    ),
-                  )
-                )
-                
-              ],
-            ),
-
-          ],
-        )
-      )
-    );
+      DayPickers(
+          init: days.join(),
+          toggleDay: (int idx) => {days[idx] = days[idx] == '1' ? '0' : '1'}),
+      // End Buttons
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: <Widget>[
+          RaisedButton(
+              onPressed: () => {Navigator.pop(context)},
+              padding: EdgeInsets.all(12),
+              child: Text(
+                'Back',
+                style: TextStyle(fontSize: 20, fontFamily: 'Roboto'),
+              )),
+          RaisedButton(
+              onPressed: confirm,
+              padding: EdgeInsets.all(12),
+              child: Text(
+                'Confirm',
+                style: TextStyle(fontSize: 20, fontFamily: 'Roboto'),
+              ))
+        ],
+      ),
+    ];
+    
+    return Scaffold(
+        body: ListView.separated(
+      padding: const EdgeInsets.only(top: 25),
+      shrinkWrap: true,
+      itemCount: 5,
+      itemBuilder: (context, index) => optionWidgets[index],
+      separatorBuilder: (context, index) => SizedBox(height: GAP),
+    ));
   }
 }

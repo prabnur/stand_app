@@ -12,7 +12,16 @@ class ToggleOptions extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       mainAxisSize: MainAxisSize.max,
-      children: <Widget>[ToggleShift(D: D), ToggleNotifications(D: D)],
+      children: <Widget>[
+        SizedBox(
+          width: 160,
+          child: ToggleShift(D: D),
+        ),
+        SizedBox(
+          width: 185,
+          child: ToggleNotifications(D: D)
+        )
+      ]
     );
   }
 }
@@ -43,7 +52,7 @@ class _ToggleShift extends State<ToggleShift> {
   @override
   Widget build(BuildContext context) {
     return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         Text('Change Shift',
@@ -88,7 +97,7 @@ class _ToggleNotifications extends State<ToggleNotifications> {
   @override
   Widget build(BuildContext context) {
     return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         Text(notifyMe ? 'Notifications On' : 'Notifications Off',

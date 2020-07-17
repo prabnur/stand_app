@@ -64,15 +64,17 @@ class _IntervalPicker extends State<IntervalPicker> {
             color: Colors.black
           )
         ),
-
-        Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          mainAxisSize: MainAxisSize.max,
-          children: <Widget>[
-            IntervalInput(id: 'H', myController: hController),
-            SizedBox(height: 20),
-            IntervalInput(id: 'M', myController: mController)
-          ],
+        
+        SizedBox(
+          height: 100,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            mainAxisSize: MainAxisSize.max,
+            children: <Widget>[
+              IntervalInput(id: 'H', myController: hController),
+              IntervalInput(id: 'M', myController: mController)
+            ],
+          )
         )
         
       ]
@@ -81,7 +83,7 @@ class _IntervalPicker extends State<IntervalPicker> {
 }
 
 class IntervalInput extends StatelessWidget {
-  static const HEIGHT = 40.0;
+  static const HEIGHT = 35.0;
   static const WIDTH = 45.0;
   
   final String id;

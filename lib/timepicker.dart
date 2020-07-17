@@ -56,13 +56,9 @@ class _TimePickerState extends State<TimePicker> {
   @override
   Widget build(BuildContext context) {
     //final TextStyle valueStyle = Theme.of(context).textTheme.bodyText2;
-    return Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+    return Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween ,
         children: <Widget>[
-          InkWell(
-              onTap: () => {_openTimePicker(context)},
-              child: Text(parseString(), style: TextStyle(fontFamily: 'Roboto', fontSize: 30))
-          ),
           RaisedButton(
             onPressed: () => {_openTimePicker(context)},
             padding: EdgeInsets.all(12),
@@ -74,6 +70,11 @@ class _TimePickerState extends State<TimePicker> {
                 color: Colors.black
               )
             ) 
+          ),
+          SizedBox(height: 20),
+          InkWell(
+              onTap: () => {_openTimePicker(context)},
+              child: Text(parseString(), style: TextStyle(fontFamily: 'Roboto', fontSize: 30))
           )
         ],
       );
