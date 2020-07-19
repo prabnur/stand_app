@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:path_provider/path_provider.dart';
 
 import 'notifications.dart';
+import 'proprtions.dart';
 
 class Data {
   // Stuff to Read/Write
@@ -14,7 +15,6 @@ class Data {
   int endHour;
   int endMin;
   String days;
-  bool dayShift;
   bool notifyMe;
 
   int stepsTaken;
@@ -23,9 +23,12 @@ class Data {
   // Error Reporting
   String msg;
 
+  // Functional
   NotificationsManager nm;
+  Proportions P;
 
   Function resetTrackerAnimation;
+  Function updateIntervalState;
 
   Data() {
     msg = '';
@@ -49,12 +52,12 @@ class Data {
         'endHour': 17,
         'endMin': 0,
         'days': '1111100',
-        'dayShift': true,
         'notifyMe': true
       };
       stepsTaken = 0;
       stepsToTake = 8;
       firstTime = true;
+      writeData();
     }
     setSteps(() {
       nm.initState(firstTime);
@@ -93,6 +96,7 @@ class Data {
     // Write Config
     final File timekeeper = await getFile('config');
     timekeeper.writeAsString(jsonEncode(serialize));
+    updateIntervalState();
 
     // Write Tracker
     calculateSteps();
@@ -131,18 +135,18 @@ class Data {
     return timeStamps;
   }
 
-  bool isDataValid() {
+  bool isIntervalValid(hour, min) {
     msg = '';
     // Check if interval hour or minute are negative
-    if (h < 0) msg = 'Interval Hour must be positive';
-    if (m < 0) msg = 'Interval Minute must be positive';
+    if (hour < 0) msg = 'Interval Hour must be positive';
+    if (min < 0) msg = 'Interval Minute must be positive';
 
     // Check if they are within their upper bound
-    if (h > 23) msg = 'Interval Hour must be between 0 and 23';
-    if (m > 59) msg = 'Interval Minute must be between 0 and 59';
+    if (hour > 23) msg = 'Interval Hour must be between 0 and 23';
+    if (min > 59) msg = 'Interval Minute must be between 0 and 59';
 
     // Check if there is enough room for an interval between start and end
-    if (getMaxInterval() < ((h * 60) + m))
+    if (getMaxInterval() < ((hour * 60) + min))
       msg = 'Interval too large for chosen start and end times';
 
     if (msg != '') return false;
@@ -151,15 +155,51 @@ class Data {
     return true;
   }
 
+  void initialiseProportion(h, w) {
+    P = new Proportions(h, w);
+  }
+
   Future<File> getFile(type) async {
     final directory = await getApplicationDocumentsDirectory();
     return File('${directory.path}/$type.txt');
   }
 
   int getMaxInterval() {
-    return dayShift
-        ? ((endHour * 60) + endMin - (startHour * 60) + startMin)
-        : ((startHour * 60) + startMin - (endHour * 60) + endMin);
+    if ((startHour < endHour) || (startHour == endHour && startMin < endMin))
+      return ((endHour * 60) + endMin) - ((startHour * 60) + startMin);
+    else
+      return (24 * 60) -
+          ((startHour * 60) + startMin) +
+          ((endHour * 60) + endMin);
+  }
+
+  String getDayStatus(String dayAcronym) {
+    switch (dayAcronym) {
+      case 'M':
+        return days[0];
+        break;
+      case 'T':
+        return days[1];
+        break;
+      case 'W':
+        return days[2];
+        break;
+      case 'Th':
+        return days[3];
+        break;
+      case 'F':
+        return days[4];
+        break;
+      case 'Sa':
+        return days[5];
+        break;
+      case 'Su':
+        return days[6];
+        break;
+      default:
+        return '0';
+        break;
+    }
   }
 
   Map<String, dynamic> get serialize {
@@ -171,7 +211,6 @@ class Data {
       'endHour': endHour,
       'endMin': endMin,
       'days': days,
-      'dayShift': dayShift,
       'notifyMe': notifyMe
     };
   }
@@ -184,7 +223,6 @@ class Data {
     endHour = map['endHour'];
     endMin = map['endMin'];
     days = map['days'];
-    dayShift = map['dayShift'];
     notifyMe = map['notifyMe'];
   }
 

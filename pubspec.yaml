@@ -27,9 +27,10 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.3
+  day_night_time_picker: ^0.1.3
   path_provider: ^1.6.7
-  flutter_feather_icons: ^1.0.3
-  font_awesome_flutter: ^8.8.1
+  # flutter_feather_icons: ^1.0.3
+  # font_awesome_flutter: ^8.8.1
   fluttertoast: ^4.0.0
   flutter_local_notifications:
     path: plugins/flutter_local_notifications

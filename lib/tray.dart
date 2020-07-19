@@ -24,7 +24,7 @@ class Tray extends StatelessWidget {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => Options(D: this.D))
+                MaterialPageRoute(builder: (context) => new Options(D: this.D))
               );
             }
           ),
