@@ -10,4 +10,4 @@ This project is still currently in development. Currently it is intended to be r
 
 ## Special Thanks
 
-* [MaikuB](https://github.com/MaikuB) for his work on [flutter_local_notifications](https://pub.dev/packages/flutter_local_notification)
+* [Michael Bui](https://github.com/MaikuB) for his work on [flutter_local_notifications](https://pub.dev/packages/flutter_local_notification)
