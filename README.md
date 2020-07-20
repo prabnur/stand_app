@@ -1,12 +1,26 @@
 # Stand App
 
+## Introduction
+
 A project that encourages people with desk jobs to stand up. Studies have shown that prolonged periods of sitting can have a very detrimental effect on health. A [reference](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0080000) to one such study.
 
 You could say sitting thrillz. But it also killz.
 
+## Thats cool but what does this do
+
+The app reminds you to stand at times you set for days that you set. You can even opt out of notifications if you want. It then also allows you to track your daily progress in a visual manner, and rewards you for completing your set goal.
+
+## What if I like my chair more than I like you
+
+The app can be used for basically any sort of repeating goals that you may have for certain days. I have other projects on my list, but if requested by people I can add a feature that will allow users to modify the notification message they recieve.
+
 ## More Info
 
-This project is still currently in development. Currently it is intended to be released on both Android and iOS
+This project is still currently in development. Currently it is intended to be released on both Android and iOS.
+
+## I wanna help
+
+Please shoot me an email if you have an idea that you think would fit in well :)
 
 ## Special Thanks
 
