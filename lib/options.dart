@@ -39,11 +39,13 @@ class Options extends StatelessWidget {
   }
 
   void confirm() {
-    var interval = updateInterval();
     D.days = days.join();
-    if (D.isIntervalValid(interval['hour'], interval['min'])) {
-      D.h = interval['hour'];
-      D.m = interval['min'];
+    var interval = updateInterval();
+    var hour = interval.containsKey('hour') ? interval['hour'] : D.h;
+    var min = interval.containsKey('min') ? interval['min'] : D.m;
+    if (D.isIntervalValid(hour, min)) {
+      D.h = hour;
+      D.m = min;
       D.writeData();
       displayMessage('Changes Applied!', Colors.green);
     } else {

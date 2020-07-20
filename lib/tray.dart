@@ -4,7 +4,7 @@ import 'options.dart';
 import 'data.dart';
 
 class Tray extends StatelessWidget {
-  static const ICON_SIZE = 50.0;
+  static const ICON_SIZE = 60.0;
   static const HELP_SIZE = 40.0;
 
   final Data D;
@@ -44,7 +44,7 @@ class Tray extends StatelessWidget {
               '?',
               style: TextStyle( 
                 fontFamily: 'Robato',
-                fontSize: 24,
+                fontSize: 26,
                 color: Colors.white
               ),
             )

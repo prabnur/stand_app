@@ -45,7 +45,7 @@ class _Home extends State<Home> with TickerProviderStateMixin {
   Image logo;
   static const LOGO_WIDTH = 1778.0;
   static const LOGO_HEIGHT = 2459.0;
-  static const LOGO_SCALE_FACTOR = 0.10;
+  static const LOGO_SCALE_FACTOR = 0.09;
 
   _Home({this.D});
 

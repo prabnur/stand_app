@@ -88,7 +88,9 @@ class Data {
   void calculateSteps() {
     stepsTaken = 0;
     int intvl = (h * 60) + m;
-    stepsToTake = getMaxInterval() ~/ intvl;
+    stepsToTake = (getMaxInterval() ~/ intvl) + 1;
+    print('Max Interval: ${getMaxInterval()}');
+    print('New steps to take $stepsToTake');
     resetTrackerAnimation();
   }
 
@@ -156,7 +158,7 @@ class Data {
   }
 
   void initialiseProportion(h, w) {
-    P = new Proportions(h, w);
+    P = Proportions.construct(h, w);
   }
 
   Future<File> getFile(type) async {
@@ -165,6 +167,8 @@ class Data {
   }
 
   int getMaxInterval() {
+    print('Start Hour: $startHour Min $startMin');
+    print('End Hour: $endHour Min $endMin');
     if ((startHour < endHour) || (startHour == endHour && startMin < endMin))
       return ((endHour * 60) + endMin) - ((startHour * 60) + startMin);
     else

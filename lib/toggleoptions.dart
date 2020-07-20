@@ -28,7 +28,7 @@ class _ToggleNotifications extends State<ToggleNotifications> {
     Fluttertoast.showToast(
       msg: D.notifyMe ? 'Notifications Set' : 'Notifications Cancelled',
       toastLength: Toast.LENGTH_SHORT,
-      gravity: ToastGravity.BOTTOM,
+      gravity: ToastGravity.TOP,
       timeInSecForIosWeb: 3,
       backgroundColor: Colors.black,
       textColor: D.notifyMe ? Colors.green : Colors.red,
@@ -36,7 +36,7 @@ class _ToggleNotifications extends State<ToggleNotifications> {
     );
   }
 
-  @override
+  @override 
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
