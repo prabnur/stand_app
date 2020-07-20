@@ -22,6 +22,7 @@ class Tray extends StatelessWidget {
             icon: Icon(Icons.settings),
             iconSize: ICON_SIZE,
             onPressed: () {
+              D.backup();
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => new Options(D: this.D))

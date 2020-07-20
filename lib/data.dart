@@ -27,11 +27,16 @@ class Data {
   NotificationsManager nm;
   Proportions P;
 
+  bool dataWritten;
+
   Function resetTrackerAnimation;
   Function updateIntervalState;
 
+  Map<String, dynamic> cache;
+
   Data() {
     msg = '';
+    dataWritten = false;
     nm = NotificationsManager();
   }
 
@@ -108,6 +113,8 @@ class Data {
 
     // Schedule Notifications
     if (notifyMe) nm.scheduleNotifications(calcTimeStamps(), days);
+
+    dataWritten = true;
   }
 
   List<int> calcTimeStamps() {
@@ -204,6 +211,20 @@ class Data {
         return '0';
         break;
     }
+  }
+
+  bool get wasDataWrittenByUser {
+    bool val = dataWritten;
+    dataWritten = false;
+    return val;
+  }
+
+  void backup() {
+    cache = this.serialize;
+  }
+
+  void restore() {
+    this.deserialize = cache;
   }
 
   Map<String, dynamic> get serialize {

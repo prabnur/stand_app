@@ -76,6 +76,8 @@ class Options extends StatelessWidget {
         children: <Widget>[
           RaisedButton(
             onPressed: () {
+              if (! D.wasDataWrittenByUser)
+                D.restore();
               Navigator.pop(context);
             },
             padding: D.P.endButtonPadding,
