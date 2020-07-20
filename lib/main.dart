@@ -47,6 +47,8 @@ class _Home extends State<Home> with TickerProviderStateMixin {
   static const LOGO_HEIGHT = 2459.0;
   static const LOGO_SCALE_FACTOR = 0.09;
 
+  static const ACTIVATION_THRESHOLD = 20; // minutes
+
   _Home({this.D});
 
   @override
@@ -91,18 +93,23 @@ class _Home extends State<Home> with TickerProviderStateMixin {
   }
 
   void takeStep() {
-    stepsTaken++;
-    if (stepsTaken == stepsToTake)
-      D.updateSteps(0, stepsToTake);
-    else
-      D.updateSteps(stepsTaken, stepsToTake);
-    ac.forward();
+    var nextTarget = D.startAmount + (stepsTaken * D.interval);
+    var now = DateTime.now();
+    var nowAmount = (now.hour * 60) + now.minute;
+    print('Now Amt $nowAmount Next Target $nextTarget Steps Taken $stepsTaken');
+
+    if ((nowAmount - nextTarget).abs() <= ACTIVATION_THRESHOLD) {
+      stepsTaken++;
+      if (stepsTaken == stepsToTake)
+        D.updateSteps(0, stepsToTake);
+      else
+        D.updateSteps(stepsTaken, stepsToTake);
+      ac.forward();
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    var size = MediaQuery.of(context).size;
-    print("Width:${size.width} Height:${size.height}");
     return Scaffold(
         body: Stack(children: <Widget>[
           Align(
@@ -125,7 +132,7 @@ class _Home extends State<Home> with TickerProviderStateMixin {
                 : LoadingScreen(),
             child: Container(),
           ),
-          Tray(D: this.D)   
+          Tray(D: this.D)
         ]),
         floatingActionButton: FloatingActionButton.extended(
             onPressed: takeStep,

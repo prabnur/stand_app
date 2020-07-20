@@ -92,7 +92,7 @@ class Data {
 
   void calculateSteps() {
     stepsTaken = 0;
-    int intvl = (h * 60) + m;
+    int intvl = interval;
     stepsToTake = (getMaxInterval() ~/ intvl) + 1;
     print('Max Interval: ${getMaxInterval()}');
     print('New steps to take $stepsToTake');
@@ -118,9 +118,9 @@ class Data {
   }
 
   List<int> calcTimeStamps() {
-    int intvl = (h * 60) + m;
-    int start = (startHour * 60) + startMin;
-    int end = (endHour * 60) + endMin;
+    int intvl = interval;
+    int start = startAmount;
+    int end = endAmount;
 
     List<int> timeStamps = new List();
 
@@ -155,6 +155,8 @@ class Data {
     if (min > 59) msg = 'Interval Minute must be between 0 and 59';
 
     // Check if there is enough room for an interval between start and end
+    print("Hour $hour Min $min");
+    print("Max Interval ${getMaxInterval()}");
     if (getMaxInterval() < ((hour * 60) + min))
       msg = 'Interval too large for chosen start and end times';
 
@@ -177,11 +179,9 @@ class Data {
     print('Start Hour: $startHour Min $startMin');
     print('End Hour: $endHour Min $endMin');
     if ((startHour < endHour) || (startHour == endHour && startMin < endMin))
-      return ((endHour * 60) + endMin) - ((startHour * 60) + startMin);
+      return endAmount - startAmount;
     else
-      return (24 * 60) -
-          ((startHour * 60) + startMin) +
-          ((endHour * 60) + endMin);
+      return (24 * 60) - startAmount + endAmount;
   }
 
   String getDayStatus(String dayAcronym) {
@@ -257,5 +257,17 @@ class Data {
     else
       nm.scheduleNotifications(calcTimeStamps(), days);
     notifyMe = newNotifyMe;
+  }
+
+  int get interval {
+    return (h * 60) + m;
+  }
+
+  int get startAmount {
+    return (startHour * 60) + startMin;
+  }
+
+  int get endAmount {
+    return (endHour * 60) + endMin;
   }
 }
