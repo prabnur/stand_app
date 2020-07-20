@@ -45,7 +45,7 @@ class _Home extends State<Home> with TickerProviderStateMixin {
   Image logo;
   static const LOGO_WIDTH = 1778.0;
   static const LOGO_HEIGHT = 2459.0;
-  static const LOGO_SCALE_FACTOR = 0.10;
+  static const LOGO_SCALE_FACTOR = 0.09;
 
   _Home({this.D});
 
@@ -66,15 +66,14 @@ class _Home extends State<Home> with TickerProviderStateMixin {
     });
     print('Data is loaded');
     ac = AnimationController(
-      duration: Duration(milliseconds: animationDuration * stepsToTake),
-      value: (stepsTaken - 1) / stepsToTake,
-      vsync: this
-    );
+        duration: Duration(milliseconds: animationDuration * stepsToTake),
+        value: (stepsTaken - 1) / stepsToTake,
+        vsync: this);
 
     animation = arcTween.animate(ac)
       ..addListener(() {
-        if (animation.value >= arcTween.transform((stepsTaken) * 1.0 / stepsToTake))
-          ac.stop();
+        if (animation.value >=
+            arcTween.transform((stepsTaken) * 1.0 / stepsToTake)) ac.stop();
         setState(() {});
       })
       ..addStatusListener((status) {
@@ -102,6 +101,8 @@ class _Home extends State<Home> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    var size = MediaQuery.of(context).size;
+    print("Width:${size.width} Height:${size.height}");
     return Scaffold(
         body: Stack(children: <Widget>[
           Align(
@@ -124,20 +125,15 @@ class _Home extends State<Home> with TickerProviderStateMixin {
                 : LoadingScreen(),
             child: Container(),
           ),
-          Tray(D: this.D)
+          Tray(D: this.D)   
         ]),
         floatingActionButton: FloatingActionButton.extended(
             onPressed: takeStep,
             backgroundColor: Color(0xfffcec03),
             elevation: 5,
-            label: Text(
-              'Stand',
-              style: TextStyle(
-                fontSize: 22,
-                fontFamily: 'Roboto',
-                color: Colors.black
-              )
-            ),
+            label: Text('Stand',
+                style: TextStyle(
+                    fontSize: 25, fontFamily: 'Roboto', color: Colors.black)),
             tooltip: 'Press when you stand!')); // Maybe add a loading screen
   }
 }

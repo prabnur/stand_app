@@ -4,7 +4,7 @@ import 'options.dart';
 import 'data.dart';
 
 class Tray extends StatelessWidget {
-  static const ICON_SIZE = 50.0;
+  static const ICON_SIZE = 60.0;
   static const HELP_SIZE = 40.0;
 
   final Data D;
@@ -22,9 +22,10 @@ class Tray extends StatelessWidget {
             icon: Icon(Icons.settings),
             iconSize: ICON_SIZE,
             onPressed: () {
+              D.backup();
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => Options(D: this.D))
+                MaterialPageRoute(builder: (context) => new Options(D: this.D))
               );
             }
           ),
@@ -44,7 +45,7 @@ class Tray extends StatelessWidget {
               '?',
               style: TextStyle( 
                 fontFamily: 'Robato',
-                fontSize: 24,
+                fontSize: 26,
                 color: Colors.white
               ),
             )
