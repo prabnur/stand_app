@@ -27,4 +27,5 @@ Please shoot me an email if you have an idea that you think would fit in well :)
 * [Michael Bui](https://github.com/MaikuB) and others for their work on [flutter_local_notifications](https://pub.dev/packages/flutter_local_notification). Seriously, what a chad.
 * [Subhamay Dutta](https://github.com/subhamayd2) for his work on [day_night_time_picker](https://pub.dev/packages/day_night_time_picker)
 * [Karthik Ponnam](https://github.com/ponnamkarthik) and others for their work on [fluttertoast](https://pub.dev/packages/fluttertoast)
+* [Gordon Hayes](https://github.com/funwithflutter), [Shinriyo](https://github.com/shinriyo) and others for their work on [confetti](https://pub.dev/packages/confetti)
 * The flutter core team for their work on [path_provider](https://pub.dev/packages/path_provider). Y'all are awesome.
