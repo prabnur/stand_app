@@ -35,11 +35,12 @@ class _Home extends State<Home> with TickerProviderStateMixin {
   final Data D;
 
   // Animation stuff
-  static const STEP_DURATION = 100;
+  static const STEP_DURATION = 300;
   int animationDuration; // ms
   Animation<double> animation;
   AnimationController ac;
   Tween<double> arcTween;
+  bool reversing;
 
   // Logo
   Image logo;
@@ -55,6 +56,7 @@ class _Home extends State<Home> with TickerProviderStateMixin {
   void initState() {
     super.initState();
     dataLoaded = false;
+    reversing = false;
     D.initState(onFinishedDataLoad);
   }
 
@@ -68,20 +70,31 @@ class _Home extends State<Home> with TickerProviderStateMixin {
     });
     print('Data is loaded');
     ac = AnimationController(
-        duration: Duration(milliseconds: animationDuration * stepsToTake),
+        duration: Duration(milliseconds: animationDuration),
         value: (stepsTaken - 1) / stepsToTake,
         vsync: this);
 
     animation = arcTween.animate(ac)
       ..addListener(() {
-        if (animation.value >=
+        if (!reversing && animation.value >=
             arcTween.transform((stepsTaken) * 1.0 / stepsToTake)) ac.stop();
+        if (reversing && animation.value <=
+            arcTween.transform((stepsTaken) * 1.0 / stepsToTake)) {
+          ac.stop();
+          reversing = false;
+        }
         setState(() {});
       })
       ..addStatusListener((status) {
         if (status == AnimationStatus.completed) {
+          print('Animation completed');
           ac.reset();
           stepsTaken = 0;
+        }
+        else if (status == AnimationStatus.dismissed) {
+          print('Reverse Animation completed');
+          reversing = false;
+          ac.reset();
         }
       });
   }
@@ -93,19 +106,27 @@ class _Home extends State<Home> with TickerProviderStateMixin {
   }
 
   void takeStep() {
-    var nextTarget = D.startAmount + (stepsTaken * D.interval);
-    var now = DateTime.now();
-    var nowAmount = (now.hour * 60) + now.minute;
-    print('Now Amt $nowAmount Next Target $nextTarget Steps Taken $stepsTaken');
-
-    if ((nowAmount - nextTarget).abs() <= ACTIVATION_THRESHOLD) {
+    setState(() {
       stepsTaken++;
-      if (stepsTaken == stepsToTake)
-        D.updateSteps(0, stepsToTake);
-      else
-        D.updateSteps(stepsTaken, stepsToTake);
-      ac.forward();
-    }
+    });
+    if (stepsTaken == stepsToTake)
+      D.updateSteps(0, stepsToTake);
+    else
+      D.updateSteps(stepsTaken, stepsToTake);
+    ac.forward();
+  }
+
+  void reverseStep() {
+    if (stepsTaken == 0) return;
+    ac.reverseDuration = Duration(milliseconds: STEP_DURATION * stepsTaken);
+    print('New Steps take $stepsTaken');
+    print("Reverse");
+    setState(() {
+      stepsTaken--;
+    });
+    D.updateSteps(stepsTaken, stepsToTake);
+    reversing = true;
+    ac.reverse();
   }
 
   @override
@@ -132,15 +153,9 @@ class _Home extends State<Home> with TickerProviderStateMixin {
                 : LoadingScreen(),
             child: Container(),
           ),
-          Tray(D: this.D)
+          Tray(D: this.D, reverseStep: reverseStep, takeStep: takeStep,)
         ]),
-        floatingActionButton: FloatingActionButton.extended(
-            onPressed: takeStep,
-            backgroundColor: Color(0xfffcec03),
-            elevation: 5,
-            label: Text('Stand',
-                style: TextStyle(
-                    fontSize: 25, fontFamily: 'Roboto', color: Colors.black)),
-            tooltip: 'Press when you stand!')); // Maybe add a loading screen
+        //floatingActionButton:
+        ); // Maybe add a loading screen
   }
 }
