@@ -16,7 +16,7 @@ The app can be used for basically any sort of repeating goals that you may have 
 
 ## More Info
 
-This project is still currently in development. Currently it is intended to be released on both Android and iOS.
+This project is intended to be released on both Android and iOS. It has a reached a point where I think it is ready for release. 
 
 ## I wanna help
 
