@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-import 'options.dart';
 import 'data.dart';
 import 'description.dart';
+import 'options.dart';
 
 
 class Tray extends StatelessWidget {
@@ -35,7 +35,7 @@ class Tray extends StatelessWidget {
             mainAxisSize: MainAxisSize.max,
             children: <Widget>[
               IconButton(
-                icon: Icon(Icons.settings),
+                icon: Icon(Icons.settings, color: Colors.black,),
                 iconSize: ICON_SIZE,
                 onPressed: () {
                   D.backup();
@@ -53,7 +53,8 @@ class Tray extends StatelessWidget {
                   FloatingActionButton.extended(
                     onPressed: reverseStep,
                     backgroundColor: Colors.black,
-                    label: FaIcon(FontAwesomeIcons.undoAlt, size: 25, color: Colors.white,)
+                    label: FaIcon(FontAwesomeIcons.undoAlt, size: 25, color: Colors.white,),
+                    heroTag: 'takeStep',
                   ),
                   SizedBox(width: 15,),
                   FloatingActionButton.extended(
@@ -68,7 +69,8 @@ class Tray extends StatelessWidget {
                         color: Colors.black
                       )
                     ),
-                    tooltip: 'Press when you stand!'
+                    tooltip: 'Press when you stand!',
+                    heroTag: 'reverseStep',
                   ),
                   SizedBox(width: 15,)
                 ],

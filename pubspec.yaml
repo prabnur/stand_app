@@ -33,6 +33,7 @@ dependencies:
   # font_awesome_flutter: ^8.8.1
   fluttertoast: ^4.0.0
   font_awesome_flutter: ^8.8.1
+  confetti: ^0.5.2
   flutter_local_notifications:
     path: plugins/flutter_local_notifications
 

@@ -5,6 +5,7 @@
 import 'package:flutter/material.dart';
 import 'dart:math';
 
+import 'confetti.dart';
 import 'data.dart';
 import 'tray.dart';
 import 'tracker.dart';
@@ -34,6 +35,11 @@ class _Home extends State<Home> with TickerProviderStateMixin {
   // Model
   final Data D;
 
+  // Primary Message
+  static const PRIMARY_MESSAGE = 'Breathe';
+  static const SECONDARY_MESSAGE = 'Great Job!';
+  String mainText = PRIMARY_MESSAGE;
+
   // Animation stuff
   static const STEP_DURATION = 300;
   int animationDuration; // ms
@@ -49,6 +55,9 @@ class _Home extends State<Home> with TickerProviderStateMixin {
   static const LOGO_SCALE_FACTOR = 0.09;
 
   static const ACTIVATION_THRESHOLD = 20; // minutes
+
+  // Confetti
+  Function blastAway;
 
   _Home({this.D});
 
@@ -76,10 +85,12 @@ class _Home extends State<Home> with TickerProviderStateMixin {
 
     animation = arcTween.animate(ac)
       ..addListener(() {
-        if (!reversing && animation.value >=
-            arcTween.transform((stepsTaken) * 1.0 / stepsToTake)) ac.stop();
-        if (reversing && animation.value <=
-            arcTween.transform((stepsTaken) * 1.0 / stepsToTake)) {
+        if (!reversing &&
+            animation.value >=
+                arcTween.transform((stepsTaken) * 1.0 / stepsToTake)) ac.stop();
+        if (reversing &&
+            animation.value <=
+                arcTween.transform((stepsTaken) * 1.0 / stepsToTake)) {
           ac.stop();
           reversing = false;
         }
@@ -89,9 +100,12 @@ class _Home extends State<Home> with TickerProviderStateMixin {
         if (status == AnimationStatus.completed) {
           print('Animation completed');
           ac.reset();
-          stepsTaken = 0;
-        }
-        else if (status == AnimationStatus.dismissed) {
+          setState(() {
+            stepsTaken = 0;
+            mainText = SECONDARY_MESSAGE;
+          });
+          blastAway();
+        } else if (status == AnimationStatus.dismissed) {
           print('Reverse Animation completed');
           reversing = false;
           ac.reset();
@@ -106,6 +120,11 @@ class _Home extends State<Home> with TickerProviderStateMixin {
   }
 
   void takeStep() {
+    if (mainText == SECONDARY_MESSAGE) {
+      setState(() {
+        mainText = PRIMARY_MESSAGE;
+      });
+    }
     setState(() {
       stepsTaken++;
     });
@@ -132,30 +151,40 @@ class _Home extends State<Home> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Stack(children: <Widget>[
-          Align(
-            alignment: Alignment(0, -0.80),
-            child: Text(
-              'Breathe',
-              style: TextStyle(fontFamily: 'RobotoMono', fontSize: 42),
-            ),
+      body: Stack(children: <Widget>[
+        Align(
+          alignment: Alignment(0, -0.80),
+          child: Text(
+            mainText,
+            style: TextStyle(fontFamily: 'RobotoMono', fontSize: 42),
           ),
-          Align(
-            alignment: Alignment.center,
-            child: Image.asset('images/logo.png',
-                width: LOGO_WIDTH * LOGO_SCALE_FACTOR,
-                height: LOGO_HEIGHT * LOGO_SCALE_FACTOR,
-                repeat: ImageRepeat.noRepeat),
-          ),
-          CustomPaint(
-            painter: dataLoaded
-                ? Tracker(stepsToTake, animation.value)
-                : LoadingScreen(),
-            child: Container(),
-          ),
-          Tray(D: this.D, reverseStep: reverseStep, takeStep: takeStep,)
-        ]),
-        //floatingActionButton:
-        ); // Maybe add a loading screen
+        ),
+        Align(
+          alignment: Alignment(0, -0.45),
+          child: ConfettiShooter(setBlastAway: (blastAwayFunc) {
+            blastAway = blastAwayFunc;
+          }),
+        ),
+        Align(
+          alignment: Alignment.center,
+          child: Image.asset('images/logo.png',
+              width: LOGO_WIDTH * LOGO_SCALE_FACTOR,
+              height: LOGO_HEIGHT * LOGO_SCALE_FACTOR,
+              repeat: ImageRepeat.noRepeat),
+        ),
+        CustomPaint(
+          painter: dataLoaded
+              ? Tracker(stepsToTake, animation.value)
+              : LoadingScreen(),
+          child: Container(),
+        ),
+        Tray(
+          D: this.D,
+          reverseStep: reverseStep,
+          takeStep: takeStep,
+        )
+      ]),
+      //floatingActionButton:
+    ); // Maybe add a loading screen
   }
 }
