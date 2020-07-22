@@ -102,21 +102,21 @@ class _TimePickerState extends State<TimePicker> {
   String parseString() {
     int h = selectedTime.hour;
     int m = selectedTime.minute;
-    String suffix = ' AM';
-    if (h > 12) {
-      suffix = ' PM';
+    String suffix = 'AM';
+    if (h >= 12) {
+      suffix = 'PM';
       h = h % 12;
     }
     if (h < 10) {
       if (m < 10)
-        return '0$h:0$m$suffix';
+        return '0$h:0$m $suffix';
       else
-        return '0$h:$m$suffix';
+        return '0$h:$m $suffix';
     } else {
       if (m < 10)
-        return '$h:0$m$suffix';
+        return '$h:0$m $suffix';
       else
-        return '$h:$m$suffix';
+        return '$h:$m $suffix';
     }
   }
 

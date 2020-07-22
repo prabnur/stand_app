@@ -15,7 +15,7 @@ void main() => runApp(Main());
 class Main extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(color: Colors.white, home: Home());
+    return MaterialApp(color: Colors.white, home: Home(), debugShowCheckedModeBanner: false,);
   }
 }
 
