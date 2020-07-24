@@ -26,20 +26,26 @@ dependencies:
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
+  confetti: ^0.5.2
   cupertino_icons: ^0.1.3
   day_night_time_picker: ^0.1.3
-  path_provider: ^1.6.7
-  # flutter_feather_icons: ^1.0.3
-  # font_awesome_flutter: ^8.8.1
   fluttertoast: ^4.0.0
+  flutter_vibrate: ^1.0.0
   font_awesome_flutter: ^8.8.1
-  confetti: ^0.5.2
   flutter_local_notifications:
     path: plugins/flutter_local_notifications
+  path_provider: ^1.6.7
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  flutter_launcher_icons: '^0.7.5'
+
+flutter_icons:
+  image_path_android: 'icons/app_icon.png'
+  image_path_ios: 'icons/app_icon.png'
+  android: 'launcher_icon'
+  ios: 'launcher_icon_ios'
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

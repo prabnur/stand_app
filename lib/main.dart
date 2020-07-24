@@ -3,6 +3,7 @@
 // found in the LICENSE file.
 
 import 'package:flutter/material.dart';
+import 'package:flutter_vibrate/flutter_vibrate.dart';
 import 'dart:math';
 
 import 'confetti.dart';
@@ -53,8 +54,6 @@ class _Home extends State<Home> with TickerProviderStateMixin {
   static const LOGO_WIDTH = 1778.0;
   static const LOGO_HEIGHT = 2459.0;
   static const LOGO_SCALE_FACTOR = 0.09;
-
-  static const ACTIVATION_THRESHOLD = 20; // minutes
 
   // Confetti
   Function blastAway;
@@ -125,6 +124,7 @@ class _Home extends State<Home> with TickerProviderStateMixin {
         mainText = PRIMARY_MESSAGE;
       });
     }
+    if (D.canVibrate) Vibrate.feedback(FeedbackType.success);
     setState(() {
       stepsTaken++;
     });
@@ -137,6 +137,7 @@ class _Home extends State<Home> with TickerProviderStateMixin {
 
   void reverseStep() {
     if (stepsTaken == 0) return;
+    if (D.canVibrate) Vibrate.feedback(FeedbackType.success);
     ac.reverseDuration = Duration(milliseconds: STEP_DURATION * stepsTaken);
     print('New Steps take $stepsTaken');
     print("Reverse");

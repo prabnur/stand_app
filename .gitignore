@@ -49,3 +49,12 @@ app.*.map.json
 # Image resources
 images
 icons
+ios/Runner/Assets.xcassets
+android/app/src/main/res
+
+# Noodles
+android/key.properties
+android/app/key.jks
+
+Logs
+android/app/usage.txt

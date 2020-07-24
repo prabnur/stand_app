@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:convert';
 
 import 'package:path_provider/path_provider.dart';
+import 'package:flutter_vibrate/flutter_vibrate.dart';
 
 import 'notifications.dart';
 import 'proprtions.dart';
@@ -28,6 +29,7 @@ class Data {
   Proportions P;
 
   bool dataWritten;
+  bool canVibrate;
 
   Function resetTrackerAnimation;
   Function updateIntervalState;
@@ -42,6 +44,7 @@ class Data {
 
   void initState(Function onFinished) async {
     var firstTime = false;
+    canVibrate = await Vibrate.canVibrate;
     resetTrackerAnimation = onFinished;
     try {
       final File file = await getFile('config');
