@@ -58,7 +58,12 @@ class Tracker extends CustomPainter {
       coordinates.add(Point(x, y));
       angles.add(angleShifted);
     }
-    // Shift the first point to the last one
+
+    if (stepsToTake == 7) {
+      var angleShiftedRad = toRadians(ANGLE_SHIFT);
+      angles.add(angleShiftedRad);
+      coordinates.add(Point(radius * cos(angleShiftedRad), radius * sin(angleShiftedRad)));
+    }
 
     // Setup Paints for Step Circles
     // Defined relative to strokeWidth
