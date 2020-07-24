@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_vibrate/flutter_vibrate.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'data.dart';
@@ -35,10 +36,14 @@ class Tray extends StatelessWidget {
             mainAxisSize: MainAxisSize.max,
             children: <Widget>[
               IconButton(
-                icon: Icon(Icons.settings, color: Colors.black,),
+                icon: Icon(
+                  Icons.settings,
+                  color: Colors.black
+                ),
                 iconSize: ICON_SIZE,
                 onPressed: () {
                   D.backup();
+                  if (D.canVibrate) Vibrate.feedback(FeedbackType.medium);
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => new Options(D: this.D))

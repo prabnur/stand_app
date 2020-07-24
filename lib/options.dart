@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:flutter_vibrate/flutter_vibrate.dart';
 import 'package:flutter/material.dart';
 
 import 'data.dart';
@@ -39,6 +40,7 @@ class Options extends StatelessWidget {
   }
 
   void confirm() {
+    if (D.canVibrate) Vibrate.feedback(FeedbackType.heavy);
     D.days = days.join();
     var interval = updateInterval();
     var hour = interval.containsKey('hour') ? interval['hour'] : D.h;
@@ -76,8 +78,8 @@ class Options extends StatelessWidget {
         children: <Widget>[
           RaisedButton(
             onPressed: () {
-              if (! D.wasDataWrittenByUser)
-                D.restore();
+              if (D.canVibrate) Vibrate.feedback(FeedbackType.light);
+              if (!D.wasDataWrittenByUser) D.restore();
               Navigator.pop(context);
             },
             padding: D.P.endButtonPadding,

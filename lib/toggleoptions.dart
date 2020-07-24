@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:flutter_vibrate/flutter_vibrate.dart';
 
 import 'data.dart';
 
@@ -20,6 +21,7 @@ class _ToggleNotifications extends State<ToggleNotifications> {
 
   void toggleNotificationsCupertino(bool newNotifyMe) {
     D.notify = newNotifyMe;
+    if (D.canVibrate) Vibrate.feedback(FeedbackType.heavy);
     setState(() {
       notifyMe = newNotifyMe;
     });

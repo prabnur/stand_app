@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:day_night_time_picker/day_night_time_picker.dart';
+import 'package:flutter_vibrate/flutter_vibrate.dart';
 
 import 'data.dart';
 
@@ -85,6 +86,7 @@ class _TimePickerState extends State<TimePicker> {
   }
 
   void _openTimePicker(BuildContext context) {
+    if (D.canVibrate) Vibrate.feedback(FeedbackType.light);
     Navigator.of(context).push(
       showPicker(
         context: context,
