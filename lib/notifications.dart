@@ -61,6 +61,25 @@ class NotificationsManager {
     return platformChannelSpecifics;
   }
 
+  String parseTimeString(h, m) {
+    String suffix = 'AM';
+    if (h >= 12) {
+      suffix = 'PM';
+      h = h % 12;
+    }
+    if (h < 10) {
+      if (m < 10)
+        return '0$h:0$m $suffix';
+      else
+        return '0$h:$m $suffix';
+    } else {
+      if (m < 10)
+        return '$h:0$m $suffix';
+      else
+        return '$h:$m $suffix';
+    }
+  }
+
   void scheduleNotifications(List<int> timeStamps, String days) async {
     NotificationDetails platformChannelSpecifics =
         getPlatformChannelSpecifics();
@@ -83,17 +102,17 @@ class NotificationsManager {
         var h = timeStamps[tsIndex] ~/ 60;
         var m = timeStamps[tsIndex] % 60;
         var time = Time(h, m, 0);
-        print('$h:$m');
+        var timeStampString = parseTimeString(h, m);
         await flutterLocalNotificationsPlugin
             .showWeeklyAtDayAndTime(
                 count,
                 NOTIFICATION_TITLE,
-                NOTIFICATION_MESSAGE + '$h:$m',
+                NOTIFICATION_MESSAGE + timeStampString,
                 allDays[dayIndex],
                 time,
                 platformChannelSpecifics)
             .then((value) =>
-                print('Notification set for $h:$m'));
+                print('Notification set for $timeStampString'));
         count++;
       }
     }
