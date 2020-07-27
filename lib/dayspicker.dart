@@ -83,7 +83,7 @@ class _DayPicker extends State<DayPicker> {
   _DayPicker({this.active, this.toggle, this.D});
 
   void press() {
-    if (D.canVibrate) Vibrate.feedback(FeedbackType.light);
+    D.feedback(FeedbackType.light);
     setState(() {
       active = !active;
     });

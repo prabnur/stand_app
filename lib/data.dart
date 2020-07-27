@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:convert';
 
+import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter_vibrate/flutter_vibrate.dart';
 
@@ -44,7 +45,14 @@ class Data {
 
   void initState(Function onFinished) async {
     var firstTime = false;
-    canVibrate = await Vibrate.canVibrate;
+
+    // The haptic plugin uses deprecated code.
+    try {
+      canVibrate = await Vibrate.canVibrate;
+    } catch (e) {
+      canVibrate = false;
+    }
+
     resetTrackerAnimation = onFinished;
     try {
       final File file = await getFile('config');
@@ -190,29 +198,46 @@ class Data {
   String getDayStatus(String dayAcronym) {
     switch (dayAcronym) {
       case 'M':
-        return days[0];
-        break;
+        return days[0]; break;
       case 'T':
-        return days[1];
-        break;
+        return days[1]; break;
       case 'W':
-        return days[2];
-        break;
+        return days[2]; break;
       case 'Th':
-        return days[3];
-        break;
+        return days[3]; break;
       case 'F':
-        return days[4];
-        break;
+        return days[4]; break;
       case 'Sa':
-        return days[5];
-        break;
+        return days[5]; break;
       case 'Su':
-        return days[6];
-        break;
+        return days[6]; break;
       default:
-        return '0';
-        break;
+        return '0'; break;
+    }
+  }
+
+  void feedback(ftype) {
+    if (canVibrate) {
+      try {
+        Vibrate.feedback(ftype);
+      } catch (e) {
+        // Since the plugin calls deprecated code default to flutter provided code
+        defaultFeedback(ftype);
+      }
+    }
+    else defaultFeedback(ftype);
+  }
+
+  void defaultFeedback(ftype) {
+    switch (ftype) {
+      case FeedbackType.light:
+        HapticFeedback.lightImpact(); break;
+      case FeedbackType.medium:
+        HapticFeedback.mediumImpact(); break;
+      case FeedbackType.heavy:
+        HapticFeedback.heavyImpact(); break;
+      default:
+        HapticFeedback.mediumImpact(); break;
     }
   }
 

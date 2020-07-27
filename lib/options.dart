@@ -40,7 +40,7 @@ class Options extends StatelessWidget {
   }
 
   void confirm() {
-    if (D.canVibrate) Vibrate.feedback(FeedbackType.heavy);
+    D.feedback(FeedbackType.heavy);
     D.days = days.join();
     var interval = updateInterval();
     var hour = interval.containsKey('hour') ? interval['hour'] : D.h;
@@ -78,7 +78,7 @@ class Options extends StatelessWidget {
         children: <Widget>[
           RaisedButton(
             onPressed: () {
-              if (D.canVibrate) Vibrate.feedback(FeedbackType.light);
+              D.feedback(FeedbackType.light);
               if (!D.wasDataWrittenByUser) D.restore();
               Navigator.pop(context);
             },

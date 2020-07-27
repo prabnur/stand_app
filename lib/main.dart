@@ -124,7 +124,7 @@ class _Home extends State<Home> with TickerProviderStateMixin {
         mainText = PRIMARY_MESSAGE;
       });
     }
-    if (D.canVibrate) Vibrate.feedback(FeedbackType.success);
+    D.feedback(FeedbackType.success);
     setState(() {
       stepsTaken++;
     });
@@ -137,7 +137,7 @@ class _Home extends State<Home> with TickerProviderStateMixin {
 
   void reverseStep() {
     if (stepsTaken == 0) return;
-    if (D.canVibrate) Vibrate.feedback(FeedbackType.success);
+    D.feedback(FeedbackType.success);
     ac.reverseDuration = Duration(milliseconds: STEP_DURATION * stepsTaken);
     print('New Steps take $stepsTaken');
     print("Reverse");

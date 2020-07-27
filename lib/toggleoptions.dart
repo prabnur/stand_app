@@ -21,7 +21,7 @@ class _ToggleNotifications extends State<ToggleNotifications> {
 
   void toggleNotificationsCupertino(bool newNotifyMe) {
     D.notify = newNotifyMe;
-    if (D.canVibrate) Vibrate.feedback(FeedbackType.heavy);
+    D.feedback(FeedbackType.heavy);
     setState(() {
       notifyMe = newNotifyMe;
     });

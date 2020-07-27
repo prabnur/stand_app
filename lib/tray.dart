@@ -43,7 +43,7 @@ class Tray extends StatelessWidget {
                 iconSize: ICON_SIZE,
                 onPressed: () {
                   D.backup();
-                  if (D.canVibrate) Vibrate.feedback(FeedbackType.medium);
+                  D.feedback(FeedbackType.medium);
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => new Options(D: this.D))

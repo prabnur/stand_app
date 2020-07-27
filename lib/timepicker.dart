@@ -86,7 +86,7 @@ class _TimePickerState extends State<TimePicker> {
   }
 
   void _openTimePicker(BuildContext context) {
-    if (D.canVibrate) Vibrate.feedback(FeedbackType.light);
+    D.feedback(FeedbackType.light);
     Navigator.of(context).push(
       showPicker(
         context: context,
