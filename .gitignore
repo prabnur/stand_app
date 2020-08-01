@@ -49,7 +49,7 @@ app.*.map.json
 # Image resources
 images
 icons
-ios/Runner/Assets.xcassets
+# ios/Runner/Assets.xcassets
 # android/app/src/main/res
 # Welp we gotta commit these resources so codemagic can build
 
