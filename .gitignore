@@ -50,7 +50,8 @@ app.*.map.json
 images
 icons
 ios/Runner/Assets.xcassets
-android/app/src/main/res
+# android/app/src/main/res
+# Welp we gotta commit these resources so codemagic can build
 
 # Noodles
 android/key.properties
