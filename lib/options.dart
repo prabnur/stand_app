@@ -48,7 +48,7 @@ class Options extends StatelessWidget {
     if (D.isIntervalValid(hour, min)) {
       D.h = hour;
       D.m = min;
-      D.writeData();
+      D.writeData(false);
       displayMessage('Changes Applied!', Colors.green);
     } else {
       displayMessage(D.msg, Colors.red);

@@ -73,7 +73,7 @@ class Data {
       stepsTaken = 0;
       stepsToTake = 8;
       firstTime = true;
-      writeData();
+      writeData(firstTime);
     }
     setSteps(() {
       nm.initState(firstTime);
@@ -110,11 +110,11 @@ class Data {
     resetTrackerAnimation();
   }
 
-  void writeData() async {
+  void writeData(bool firstTime) async {
     // Write Config
     final File timekeeper = await getFile('config');
     timekeeper.writeAsString(jsonEncode(serialize));
-    updateIntervalState();
+    if(firstTime) updateIntervalState();
 
     // Write Tracker
     calculateSteps();
