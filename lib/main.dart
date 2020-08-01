@@ -79,7 +79,7 @@ class _Home extends State<Home> with TickerProviderStateMixin {
     print('Data is loaded');
     ac = AnimationController(
         duration: Duration(milliseconds: animationDuration),
-        value: (stepsTaken - 1) / stepsToTake,
+        value: stepsTaken / stepsToTake,
         vsync: this);
 
     animation = arcTween.animate(ac)
