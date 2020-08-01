@@ -47,7 +47,7 @@ app.*.map.json
 **/.vscode
 
 # Image resources
-images
+# images
 icons
 # ios/Runner/Assets.xcassets
 # android/app/src/main/res
