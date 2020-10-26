@@ -16,7 +16,8 @@ The app can be used for basically any sort of repeating goals that you may have 
 
 ## More Info
 
-This project is intended to be released on both Android and iOS. It has a reached a point where I think it is ready for release. 
+This project is ireleased on [Android](https://play.google.com/store/apps/details?id=com.prabnur.stand_app).
+I am running into Technical Issues with Apple's payment system so I cannot get a Dev Account with them at this point.
 
 ## I wanna help
 
