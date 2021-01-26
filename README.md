@@ -3,13 +3,11 @@
 [Android](https://play.google.com/store/apps/details?id=com.prabnur.stand_app)
 ## Introduction
 
-A project that encourages people with desk jobs to stand up. Studies have shown that prolonged periods of sitting can have a very detrimental effect on health. A [reference](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0080000) to one such study.
+A project that encourages people with desk jobs to stand up. The app reminds you to stand at times you set for days that you set. You can even opt out of notifications if you want. It then also allows you to track your daily progress in a visual manner, and rewards you for completing your set goal.
 
-You could say sitting thrillz. But it also killz.
+## Why
 
-## Thats cool but what does this do
-
-The app reminds you to stand at times you set for days that you set. You can even opt out of notifications if you want. It then also allows you to track your daily progress in a visual manner, and rewards you for completing your set goal.
+Studies have shown that prolonged periods of sitting can have a very detrimental effect on health. A [reference](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0080000) to one such study. My father developed lower back problems because he spent a lot of his life sitting.
 
 ## What if I like my chair more than I like you
 
