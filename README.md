@@ -1,5 +1,6 @@
 # Stand App
 
+[Android](https://play.google.com/store/apps/details?id=com.prabnur.stand_app)
 ## Introduction
 
 A project that encourages people with desk jobs to stand up. Studies have shown that prolonged periods of sitting can have a very detrimental effect on health. A [reference](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0080000) to one such study.
@@ -16,7 +17,7 @@ The app can be used for basically any sort of repeating goals that you may have 
 
 ## More Info
 
-This project is ireleased on [Android](https://play.google.com/store/apps/details?id=com.prabnur.stand_app).
+This project is released on [Android](https://play.google.com/store/apps/details?id=com.prabnur.stand_app).
 I am running into Technical Issues with Apple's payment system so I cannot get a Dev Account with them at this point.
 
 ## I wanna help
